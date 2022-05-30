@@ -1,0 +1,56 @@
+// updating the cache after a mutation
+
+const [addTodo] = useMutation(ADD_TODO, {
+    update(cache, { data: { addTodo } }) {
+      cache.modify({
+        fields: {
+          todos(existingTodos = []) {
+            const newTodoRef = cache.writeFragment({
+              data: addTodo,
+              fragment: gql`
+                fragment NewTodo on Todo {
+                  id
+                  type
+                }
+              `
+            });
+            return [...existingTodos, newTodoRef];
+          }
+        }
+      });
+    },
+
+    // make a network call
+    refetchQueries: ["ReallyImportantQuery"],
+
+    // refetching affected active queries
+    onQueryUpdated(observableQuery) {
+    // Define any custom logic for determining whether to refetch
+    if (shouldRefetchQuery(observableQuery)) {
+      return observableQuery.refetch();
+    }
+  },
+  });
+
+  // optimistic mutation response for an existing cache data
+  updateComment={({ commentId, commentContent }) =>
+        mutate({
+          variables: { commentId, commentContent },
+          optimisticResponse: {
+            updateComment: {
+              id: commentId,
+              __typename: "Comment",
+              content: commentContent
+            }
+          }
+        })
+      }
+
+// optimistic mutation response for a new mutation data
+optimisticResponse: {
+  addTodo: {
+    id: 'temp-id',
+    __typename: "Todo",
+    description: input.value // Obtained from user input
+  }
+}
