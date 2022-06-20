@@ -1,6 +1,6 @@
 import React from "react";
 // import Swiper core and required modules
-import { Navigation, Pagination, A11y } from "swiper";
+import { Navigation, Pagination, A11y, Autoplay } from "swiper";
 import {
   Grid,
   useMantineTheme,
@@ -17,9 +17,11 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
+import "swiper/css/autoplay";
 import { Image } from "@mantine/core";
 import productImg from "../assets/product.jpg";
 import { Settings, List } from "tabler-icons-react";
+import Card2 from "../components/Card2";
 
 const useStyles = createStyles((theme) => ({
   categories: {
@@ -69,13 +71,63 @@ const useStyles = createStyles((theme) => ({
       fontWeight: "bold",
     },
   },
+  middle: {
+    display: "flex",
+    flexDirection: "column",
+    height: "100%",
+    gap: "1rem",
+  },
+  middleBottom: {
+    flexGrow: 1,
+    backgroundColor: "white",
+    borderRadius: "10px",
+  },
+  hotProducts: {
+    width: "95%",
+    margin: "auto",
+  },
   right: {
     display: "flex",
     flexDirection: "column",
+    gap: "1rem",
+    height: "100%",
+  },
+  rightTop: {
+    display: "flex",
+    flexDirection: "column",
     alignItems: "center",
-    backgroundColor: "red",
+    backgroundColor: "white",
     borderRadius: "10px",
-    padding: '1rem 10px',
+    padding: "1rem 10px",
+    boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.1)",
+  },
+  rightBottom: {
+    flexGrow: "1",
+    borderRadius: "10px",
+    backgroundColor: "#ff6884",
+    padding: "10px",
+  },
+  money: {
+    backgroundColor: "#ffd4b4",
+    width: "max-content",
+    padding: "0.5rem 1rem",
+    borderRadius: "10px",
+    marginBottom: "1.5rem",
+  },
+  weeklyDeals: {
+    backgroundColor: "white",
+    borderRadius: "10px",
+    padding: "15px 25px",
+  },
+  weeklyDealsImages: {
+    display: "flex",
+    gap: ".5rem",
+    justifyContent: "space-between",
+  },
+  textWrapper: {
+    display: "flex",
+    justifyContent: "space-between",
+    cursor: "pointer",
   },
 }));
 
@@ -128,7 +180,7 @@ function About() {
 
   return (
     <div>
-      <Grid columns={24}>
+      <Grid columns={24} mb={30}>
         <Grid.Col span={5}>
           <div>
             <ul className={classes.categories}>
@@ -151,50 +203,169 @@ function About() {
         </Grid.Col>
 
         <Grid.Col span={14}>
-          <Swiper
-            // install Swiper modules
-            modules={[Navigation, Pagination, A11y]}
-            spaceBetween={50}
-            slidesPerView={1}
-            navigation
-            pagination={{ clickable: true }}
-            scrollbar={{ draggable: true }}
-            onSwiper={(swiper) => console.log(swiper)}
-            onSlideChange={() => console.log("slide change")}
-            style={{
-              height: "250px",
-              borderRadius: "10px",
-              overflow: "hidden",
-            }}
-          >
-            <SwiperSlide>
-              <Image src={productImg} height={300} />
-            </SwiperSlide>
-            <SwiperSlide>
-              <Image src={productImg} height={300} />
-            </SwiperSlide>
-            <SwiperSlide>
-              <Image src={productImg} height={300} />
-            </SwiperSlide>
-            <SwiperSlide>
-              <Image src={productImg} height={300} />
-            </SwiperSlide>
-          </Swiper>
+          <div className={classes.middle}>
+            <div>
+              <Swiper
+                // install Swiper modules
+                modules={[Autoplay, Pagination, A11y]}
+                autoplay
+                spaceBetween={50}
+                slidesPerView={1}
+                pagination={{ clickable: true }}
+                scrollbar={{ draggable: true }}
+                onSwiper={(swiper) => console.log(swiper)}
+                onSlideChange={() => console.log("slide change")}
+                style={{
+                  height: "250px",
+                  borderRadius: "10px",
+                  overflow: "hidden",
+                }}
+              >
+                <SwiperSlide>
+                  <Image src={productImg} height={300} />
+                </SwiperSlide>
+                <SwiperSlide>
+                  <Image src={productImg} height={300} />
+                </SwiperSlide>
+                <SwiperSlide>
+                  <Image src={productImg} height={300} />
+                </SwiperSlide>
+                <SwiperSlide>
+                  <Image src={productImg} height={300} />
+                </SwiperSlide>
+              </Swiper>
+            </div>
+            <div className={classes.middleBottom}>
+              <div className={classes.hotProducts}>
+                <Text weight={700} mb={10} mt={10} size="xl">
+                  Super<span style={{ color: "red" }}>Deals</span>
+                </Text>
+                <Text weight={400} mb={10}>
+                  Top Products. Incredible prices
+                </Text>
+                <div className={classes.money}>
+                  <Text weight={700} size="xl">
+                    ETB 207.48
+                  </Text>
+                </div>
+
+                <Swiper
+                  // install Swiper modules
+                  modules={[Autoplay, Pagination, A11y]}
+                  autoplay
+                  spaceBetween={10}
+                  slidesPerView={5}
+                  pagination={{ clickable: true }}
+                  scrollbar={{ draggable: true }}
+                  onSwiper={(swiper) => console.log(swiper)}
+                  onSlideChange={() => console.log("slide change")}
+                  style={{
+                    height: "100px",
+                    overflow: "hidden",
+                  }}
+                >
+                  <SwiperSlide>
+                    <Image src={productImg} height={100} />
+                  </SwiperSlide>
+                  <SwiperSlide>
+                    <Image src={productImg} height={100} />
+                  </SwiperSlide>
+                  <SwiperSlide>
+                    <Image src={productImg} height={100} />
+                  </SwiperSlide>
+                  <SwiperSlide>
+                    <Image src={productImg} height={100} />
+                  </SwiperSlide>
+                  <SwiperSlide>
+                    <Image src={productImg} height={100} />
+                  </SwiperSlide>
+                  <SwiperSlide>
+                    <Image src={productImg} height={100} />
+                  </SwiperSlide>
+                  <SwiperSlide>
+                    <Image src={productImg} height={100} />
+                  </SwiperSlide>
+                </Swiper>
+              </div>
+            </div>
+          </div>
         </Grid.Col>
 
         <Grid.Col span={5}>
           <div className={classes.right}>
-            <Avatar radius="xl" size="lg" />
-            <Text weight={500} mb={20}>Welcome to Express</Text>
-            <div style={{ display: "flex", gap: "1rem" }}>
-              <Button radius="xl">Register</Button>
-              <Button radius="xl">Sign in</Button>
+            <div className={classes.rightTop}>
+              <Avatar radius="xl" size="lg" />
+              <Text weight={700} mb={20} size="xl">
+                Welcome to Express
+              </Text>
+              <div style={{ display: "flex", gap: "1rem" }}>
+                <Button radius="xl">Join</Button>
+                <Button radius="xl" variant="outline">
+                  Sign in
+                </Button>
+              </div>
+            </div>
+
+            <div className={classes.rightBottom}>
+              <Text weight={700} size="lg">
+                Welcome to OurExpress
+              </Text>
+              <Text weight={400} mb={20}>
+                get items at 70% off
+              </Text>
+              <Swiper
+                // install Swiper modules
+                modules={[Autoplay, Pagination, A11y]}
+                autoplay
+                spaceBetween={50}
+                slidesPerView={1}
+                pagination={{ clickable: true }}
+                onSwiper={(swiper) => console.log(swiper)}
+                onSlideChange={() => console.log("slide change")}
+                style={{
+                  height: "250px",
+                  borderRadius: "10px",
+                  overflow: "hidden",
+                }}
+              >
+                <SwiperSlide>
+                  <Image src={productImg} height={300} />
+                </SwiperSlide>
+                <SwiperSlide>
+                  <Image src={productImg} height={300} />
+                </SwiperSlide>
+                <SwiperSlide>
+                  <Image src={productImg} height={300} />
+                </SwiperSlide>
+                <SwiperSlide>
+                  <Image src={productImg} height={300} />
+                </SwiperSlide>
+              </Swiper>
             </div>
           </div>
-
-          <div></div>
         </Grid.Col>
       </Grid>
+
+      <div className={classes.weeklyDeals}>
+        <div className={classes.textWrapper}>
+          <div>
+            <Text weight="700" size="xl">
+              Weekly Deals
+            </Text>
+            <Text weight={300} mb={20}>
+              Low price for 30 days
+            </Text>
+          </div>
+          <Text weight={300}>VIEW MORE</Text>
+        </div>
+        <div className={classes.weeklyDealsImages}>
+          <Card2 />
+          <Card2 />
+          <Card2 />
+          <Card2 />
+          <Card2 />
+        </div>
+      </div>
     </div>
   );
 }

@@ -8,7 +8,7 @@ import Home from "./pages/home";
 function App() {
   return (
     <Layout>
-      <Container size="lg">
+      <Container size="xl">
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="about" element={<About />} />

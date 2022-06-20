@@ -102,7 +102,7 @@ const HeaderNav = () => {
 
   return (
     <Header height={56} className={classes.header} mb={30}>
-      <Container className={classes.inner}>
+      <Container className={classes.inner} size="lg">
         <Group mr={50}>
           <Burger opened={opened} onClick={() => toggleOpened()} size="sm" />
           <Image src={logo} width={30} />
