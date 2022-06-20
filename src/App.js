@@ -1,35 +1,20 @@
+import { Container } from "@mantine/core";
 import React from "react";
-import { NetworkStatus, useLazyQuery } from "@apollo/client";
-import { useQuery } from "@apollo/client";
-import { GET_CHARACTERS } from "./graphql/queries";
+import { Routes, Route, Link } from "react-router-dom";
+import Layout from "./components/layout/Layout";
+import About from "./pages/about";
+import Home from "./pages/home";
 
 function App() {
-  const [getCharacters, { loading, error, data, refetch, networkStatus, fetchMore }] =
-    useLazyQuery(GET_CHARACTERS, {
-      variables: { page: 1 },
-      notifyOnNetworkStatusChange: true,
-      fetchPolicy: "network-only", // Used for first execution
-      nextFetchPolicy: "cache-first", // Used for subsequent executions
-      onCompleted: () => console.log('done successfully')
-    });
-
-  if (networkStatus === NetworkStatus.refetch) return "Refetching!";
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>Error :(</p>;
-
   return (
-    <div>
-      {data &&
-        data.characters.results.map((result, index) => (
-          <h1 key={index}>{result.name}</h1>
-        ))}
-
-      <button onClick={() => getCharacters()}>fetch!</button>
-      <button onClick={() => refetch({ page: Math.ceil(Math.random() * 5) })}>
-        Refetch!
-      </button>
-      <button onClick={() => fetchMore()}>next page</button>
-    </div>
+    <Layout>
+      <Container size="lg">
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="about" element={<About />} />
+        </Routes>
+      </Container>
+    </Layout>
   );
 }
 
