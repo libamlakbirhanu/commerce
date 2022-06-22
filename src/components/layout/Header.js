@@ -105,7 +105,7 @@ const HeaderNav = () => {
       <Container className={classes.inner} size="xl">
         <Group mr={50}>
           <Burger opened={opened} onClick={() => toggleOpened()} size="sm" />
-          <Image src={logo} width={30} />
+          <Image src={logo} width={60} />
         </Group>
 
         <Autocomplete
