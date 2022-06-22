@@ -1,3 +1,4 @@
+import Footer from "./Footer";
 import React from "react";
 import HeaderNav from "./Header";
 
@@ -6,6 +7,7 @@ function Layout({ children }) {
     <>
       <HeaderNav />
       {children}
+      <Footer />
     </>
   );
 }
