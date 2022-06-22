@@ -13,6 +13,7 @@ import {
 import { useBooleanToggle } from "@mantine/hooks";
 import { Search, ShoppingCart } from "tabler-icons-react";
 import logo from "../../assets/logo192.png";
+import { useNavigate } from "react-router-dom";
 
 const useStyles = createStyles((theme) => ({
   header: {
@@ -84,6 +85,7 @@ const data = {
 };
 
 const HeaderNav = () => {
+  let navigate = useNavigate();
   const [opened, toggleOpened] = useBooleanToggle(false);
   const { classes } = useStyles();
 
@@ -105,7 +107,12 @@ const HeaderNav = () => {
       <Container className={classes.inner} size="xl">
         <Group mr={50}>
           <Burger opened={opened} onClick={() => toggleOpened()} size="sm" />
-          <Image src={logo} width={60} />
+          <Image
+            src={logo}
+            width={60}
+            style={{ cursor: "pointer" }}
+            onClick={() => navigate("/", { replace: true })}
+          />
         </Group>
 
         <Autocomplete

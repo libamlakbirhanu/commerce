@@ -4,7 +4,7 @@ import { Routes, Route, Link } from "react-router-dom";
 import Layout from "./components/layout/Layout";
 import About from "./pages/about";
 import Index from "./pages/index";
-import Home from "./pages/home";
+import Detail from "./pages/detail";
 
 function App() {
   return (
@@ -13,6 +13,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="about" element={<About />} />
+          <Route path="detail" element={<Detail />} />
         </Routes>
       </Container>
     </Layout>
