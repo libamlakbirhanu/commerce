@@ -7,7 +7,7 @@ import "./index.css";
 import App from "./App";
 
 export const client = new ApolloClient({
-  uri: "https://rickandmortyapi.com/graphql",
+  uri: "https://commerce.api.oddatech.com/graphql",
   cache: new InMemoryCache(),
 });
 

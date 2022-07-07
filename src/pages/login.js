@@ -1,4 +1,5 @@
 import React from "react";
+import { useMutation } from "@apollo/client";
 import * as Yup from "yup";
 import { useForm, yupResolver } from "@mantine/form";
 import {
@@ -14,6 +15,7 @@ import {
 } from "@mantine/core";
 import { Link } from "react-router-dom";
 import loginGif from "../assets/login-bg0.gif";
+import { LOGIN } from "../graphql/mutations";
 
 const useStyles = createStyles((theme) => ({
   wrapper: {
@@ -23,9 +25,10 @@ const useStyles = createStyles((theme) => ({
   },
 
   form: {
-    borderRight: `1px solid ${
-      theme.colorScheme === "dark" ? theme.colors.dark[7] : theme.colors.gray[3]
-    }`,
+    // borderRight: `1px solid ${
+    //   theme.colorScheme === "dark" ? theme.colors.dark[7] : theme.colors.gray[3]
+    // }`,
+    backgroundColor: "transparent",
     maxWidth: 450,
     paddingTop: 80,
 
@@ -53,6 +56,7 @@ const schema = Yup.object().shape({
 });
 
 const Login = () => {
+  const [login, { data, loading, error }] = useMutation(LOGIN);
   const { classes } = useStyles();
 
   const form = useForm({
@@ -63,8 +67,22 @@ const Login = () => {
     },
   });
 
+  // if (loading) return "Submitting...";
+  if (error) return `Submission error! ${error.message}`;
+
   const handleSubmit = (values) => {
-    console.log(values);
+    try {
+      login({
+        variables: {
+          input: {
+            username: values.email,
+            password: values.password,
+          },
+        },
+      });
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   return (
@@ -97,7 +115,7 @@ const Login = () => {
             {...form.getInputProps("password")}
           />
           <Checkbox label="Keep me logged in" mt="xl" size="md" />
-          <Button fullWidth mt="xl" size="md" type="submit">
+          <Button fullWidth mt="xl" size="md" type="submit" loading={loading}>
             Login
           </Button>
 

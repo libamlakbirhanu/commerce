@@ -24,9 +24,10 @@ const useStyles = createStyles((theme) => ({
   },
 
   form: {
-    borderRight: `1px solid ${
-      theme.colorScheme === "dark" ? theme.colors.dark[7] : theme.colors.gray[3]
-    }`,
+    // borderRight: `1px solid ${
+    //   theme.colorScheme === "dark" ? theme.colors.dark[7] : theme.colors.gray[3]
+    // }`,
+    backgroundColor: "transparent",
     maxWidth: 450,
     paddingTop: 80,
 
@@ -74,9 +75,8 @@ const Register = () => {
     },
   });
 
-  if (loading) return "Submitting...";
+  // if (loading) return "Submitting...";
   if (error) return `Submission error! ${error.message}`;
-  if (data) console.log(data);
 
   const handleSubmit = (values) => {
     try {
@@ -132,7 +132,7 @@ const Register = () => {
             size="md"
             {...form.getInputProps("confirmPassword")}
           />
-          <Button fullWidth mt="xl" size="md" type="submit">
+          <Button fullWidth mt="xl" size="md" type="submit" loading={loading}>
             Register
           </Button>
 
