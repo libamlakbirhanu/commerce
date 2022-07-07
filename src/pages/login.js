@@ -13,7 +13,7 @@ import {
   Image,
 } from "@mantine/core";
 import { Link } from "react-router-dom";
-import loginGif from "../assets/login.gif";
+import loginGif from "../assets/login-bg0.gif";
 
 const useStyles = createStyles((theme) => ({
   wrapper: {

@@ -1,4 +1,5 @@
 import React from "react";
+import { useMutation } from "@apollo/client";
 import * as Yup from "yup";
 import { useForm, yupResolver } from "@mantine/form";
 import {
@@ -12,7 +13,8 @@ import {
   Image,
 } from "@mantine/core";
 import { Link } from "react-router-dom";
-import loginGif from "../assets/login.gif";
+import loginGif from "../assets/login-bg0.gif";
+import { REGISTER } from "../graphql/mutations";
 
 const useStyles = createStyles((theme) => ({
   wrapper: {
@@ -60,6 +62,7 @@ const schema = Yup.object().shape({
 });
 
 const Register = () => {
+  const [register, { data, loading, error }] = useMutation(REGISTER);
   const { classes } = useStyles();
 
   const form = useForm({
@@ -71,8 +74,24 @@ const Register = () => {
     },
   });
 
+  if (loading) return "Submitting...";
+  if (error) return `Submission error! ${error.message}`;
+  if (data) console.log(data);
+
   const handleSubmit = (values) => {
-    console.log(values);
+    try {
+      register({
+        variables: {
+          input: {
+            email: values.email,
+            password: values.password,
+            password_confirmation: values.confirmPassword,
+          },
+        },
+      });
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   return (
