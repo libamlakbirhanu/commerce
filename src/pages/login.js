@@ -13,7 +13,7 @@ import {
   Anchor,
   Image,
 } from "@mantine/core";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import loginGif from "../assets/login-bg0.gif";
 import { LOGIN } from "../graphql/mutations";
 
@@ -37,6 +37,15 @@ const useStyles = createStyles((theme) => ({
     },
   },
 
+  errorMessage: {
+    color: "red",
+    marginBottom: "1rem",
+    backgroundColor: "rgba(255,0,0,.1)",
+    border: "1px solid red",
+    padding: "10px",
+    borderRadius: "5px",
+  },
+
   title: {
     color: theme.colorScheme === "dark" ? theme.white : theme.black,
     fontFamily: `Greycliff CF, ${theme.fontFamily}`,
@@ -57,6 +66,7 @@ const schema = Yup.object().shape({
 
 const Login = () => {
   const [login, { data, loading, error }] = useMutation(LOGIN);
+  const navigate = useNavigate();
   const { classes } = useStyles();
 
   const form = useForm({
@@ -67,12 +77,9 @@ const Login = () => {
     },
   });
 
-  // if (loading) return "Submitting...";
-  if (error) return `Submission error! ${error.message}`;
-
-  const handleSubmit = (values) => {
+  const handleSubmit = async (values) => {
     try {
-      login({
+      await login({
         variables: {
           input: {
             username: values.email,
@@ -80,6 +87,8 @@ const Login = () => {
           },
         },
       });
+
+      navigate("/", { replace: true });
     } catch (err) {
       console.log(err);
     }
@@ -99,6 +108,7 @@ const Login = () => {
             Welcome back to Vastoll!
           </Title>
 
+          {error && <div className={classes.errorMessage}>{error.message}</div>}
           <TextInput
             required
             label="email"
