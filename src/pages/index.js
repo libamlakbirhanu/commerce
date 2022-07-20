@@ -171,7 +171,7 @@ function Index() {
         }
         className={classes.menu}
       >
-        <Menu.Item onClick={() => console.log("Hello")}>Label</Menu.Item>
+        <Menu.Item>Label</Menu.Item>
         <Menu.Item key="12">Shoes</Menu.Item>
         <Menu.Item key="123">Pants</Menu.Item>
         <Menu.Item key="1234">Balls</Menu.Item>
@@ -215,8 +215,8 @@ function Index() {
                 slidesPerView={1}
                 pagination={{ clickable: true }}
                 scrollbar={{ draggable: true }}
-                onSwiper={(swiper) => console.log(swiper)}
-                onSlideChange={() => console.log("slide change")}
+                // onSwiper={(swiper) => console.log(swiper)}
+                // onSlideChange={() => console.log("slide change")}
                 style={{
                   height: "250px",
                   borderRadius: "10px",
@@ -259,8 +259,8 @@ function Index() {
                   slidesPerView={5}
                   pagination={{ clickable: true }}
                   scrollbar={{ draggable: true }}
-                  onSwiper={(swiper) => console.log(swiper)}
-                  onSlideChange={() => console.log("slide change")}
+                  // onSwiper={(swiper) => console.log(swiper)}
+                  // onSlideChange={() => console.log("slide change")}
                   style={{
                     height: "100px",
                     overflow: "hidden",
@@ -322,8 +322,8 @@ function Index() {
                 spaceBetween={50}
                 slidesPerView={1}
                 pagination={{ clickable: true }}
-                onSwiper={(swiper) => console.log(swiper)}
-                onSlideChange={() => console.log("slide change")}
+                // onSwiper={(swiper) => console.log(swiper)}
+                // onSlideChange={() => console.log("slide change")}
                 style={{
                   height: "250px",
                   borderRadius: "10px",
