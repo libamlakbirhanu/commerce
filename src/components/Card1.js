@@ -1,7 +1,7 @@
 import { createStyles, Image, Text } from "@mantine/core";
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import bikini from "../assets/bikini.png";
+import shoes from "../assets/shoes.png";
 
 const useStyles = createStyles((theme) => ({
   wrapper: {
@@ -63,7 +63,7 @@ function Card1() {
       className={classes.wrapper}
       onClick={() => navigate("/detail", { replace: true })}
     >
-      <Image src={bikini} width={170} className={classes.image} mb={10} />
+      <Image src={shoes} width={170} className={classes.image} mb={10} />
       <div style={{ display: "flex", flexDirection: "column", gap: "0.1rem" }}>
         <Text className={classes.largeText} size="lg" color="gray" weight={600}>
           Fashion Sports TF Key
