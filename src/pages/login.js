@@ -14,6 +14,8 @@ import {
   Image,
 } from "@mantine/core";
 import { Link, useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { authLogin } from "../redux/authSlice";
 import loginGif from "../assets/login-bg0.gif";
 import { LOGIN } from "../graphql/mutations";
 
@@ -65,6 +67,7 @@ const schema = Yup.object().shape({
 });
 
 const Login = () => {
+  const dispatch = useDispatch();
   const [login, { data, loading, error }] = useMutation(LOGIN);
   const navigate = useNavigate();
   const { classes } = useStyles();
@@ -79,7 +82,7 @@ const Login = () => {
 
   const handleSubmit = async (values) => {
     try {
-      await login({
+      const res = await login({
         variables: {
           input: {
             username: values.email,
@@ -88,6 +91,7 @@ const Login = () => {
         },
       });
 
+      dispatch(authLogin(res.data.login.user));
       navigate("/", { replace: true });
     } catch (err) {
       console.log(err);

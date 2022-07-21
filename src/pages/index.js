@@ -1,5 +1,6 @@
 import React from "react";
 // import Swiper core and required modules
+import { useNavigate } from "react-router-dom";
 import { Navigation, Pagination, A11y, Autoplay } from "swiper";
 import {
   Grid,
@@ -134,6 +135,7 @@ const useStyles = createStyles((theme) => ({
 }));
 
 function Index() {
+  let navigate = useNavigate();
   const theme = useMantineTheme();
   const { classes } = useStyles();
 
@@ -301,7 +303,12 @@ function Index() {
                 Welcome to Vastoll
               </Text>
               <div style={{ display: "flex", gap: "1rem" }}>
-                <Button radius="xl">Join</Button>
+                <Button
+                  radius="xl"
+                  onClick={() => navigate("/about", { replace: true })}
+                >
+                  Join
+                </Button>
                 <Button radius="xl" variant="outline">
                   Sign in
                 </Button>

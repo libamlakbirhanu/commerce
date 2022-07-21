@@ -1,5 +1,5 @@
 import { Ability, AbilityBuilder } from "@casl/ability";
-import { store } from "../redux/storeConfig/store";
+import { store } from "../redux/store";
 
 const ability = new Ability();
 
@@ -9,11 +9,11 @@ const checkAbility = (action, subject) => {
 
 store.subscribe(() => {
   let auth = store.getState().auth;
-  ability.update(defineRulesFor(auth.role));
+  ability.update(defineRulesFor(auth?.user.role));
 });
 
 const defineRulesFor = (role) => {
-  const { can, rules } = AbilityBuilder();
+  const { can, rules } = new AbilityBuilder();
 
   switch (role) {
     case "admin":
@@ -36,6 +36,6 @@ const defineRulesFor = (role) => {
   }
 
   return rules;
-}
+};
 
-export default checkAbility
+export default checkAbility;

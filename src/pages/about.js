@@ -1,6 +1,7 @@
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { decrement, increment } from "../redux/counterSlice";
+import CAN from "../casl/can";
 
 function About() {
   const count = useSelector((state) => state.counter.value);
@@ -16,12 +17,9 @@ function About() {
           Increment
         </button>
         <span>{count}</span>
-        <button
-          aria-label="Decrement value"
-          onClick={() => dispatch(decrement())}
-        >
-          Decrement
-        </button>
+        {CAN("decrement", "count") && (
+          <button onClick={() => dispatch(decrement())}>Decrement</button>
+        )}
       </div>
     </div>
   );
