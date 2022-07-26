@@ -18,3 +18,17 @@ export const GET_CHARACTERS = gql`
     }
   }
 `;
+
+// client side queries
+
+export const IS_LOGGED_IN = gql`
+  query IsUserLoggedIn {
+    isLoggedIn @client
+  }
+`;
+
+export const USER = gql`
+  query USER {
+    user @client
+  }
+`;

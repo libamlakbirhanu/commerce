@@ -18,6 +18,7 @@ import { useDispatch } from "react-redux";
 import { authLogin } from "../redux/authSlice";
 import loginGif from "../assets/login-bg0.gif";
 import { LOGIN } from "../graphql/mutations";
+import { isLoggedInVar, user } from "../store";
 
 const useStyles = createStyles((theme) => ({
   wrapper: {
@@ -91,6 +92,12 @@ const Login = () => {
         },
       });
 
+      if (res.data.login) {
+        localStorage.setItem("token", res.data.login.access_token);
+        localStorage.setItem("userId", res.data.login.user.id);
+        isLoggedInVar(true);
+        user(res.data.login.user);
+      }
       dispatch(authLogin(res.data.login.user));
       navigate("/", { replace: true });
     } catch (err) {

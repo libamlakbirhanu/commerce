@@ -7,10 +7,33 @@ import { Provider } from "react-redux";
 
 import "./index.css";
 import App from "./App";
+import { isLoggedInVar, user } from "./store";
+import { typeDefs } from "./graphql/clientTypedefs";
 
 export const client = new ApolloClient({
   uri: "https://commerce.api.oddatech.com/graphql",
-  cache: new InMemoryCache(),
+  cache: new InMemoryCache({
+    typePolicies: {
+      AuthPayload: {
+        keyFields: [],
+      },
+      Query: {
+        fields: {
+          isLoggedIn: {
+            read() {
+              return isLoggedInVar();
+            },
+          },
+          user: {
+            read() {
+              return user()
+            }
+          }
+        },
+      },
+    },
+  }),
+  typeDefs,
 });
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
