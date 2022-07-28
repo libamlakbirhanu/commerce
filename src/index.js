@@ -11,7 +11,7 @@ import { isLoggedInVar, user } from "./store";
 import { typeDefs } from "./graphql/clientTypedefs";
 
 export const client = new ApolloClient({
-  uri: "https://rickandmortyapi.com/graphql",
+  uri: "http://localhost:5001/graphql",
   cache: new InMemoryCache({
     typePolicies: {
       AuthPayload: {

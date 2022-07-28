@@ -28,3 +28,12 @@ export const LOGIN = gql`
     }
   }
 `;
+
+export const ADD_CAR = gql`
+  mutation AddCar($carInput: CarData!) {
+    addCar(carInput: $carInput) {
+      _id
+      name
+    }
+  }
+`;

@@ -20,6 +20,15 @@ export const GET_CHARACTERS = gql`
   }
 `;
 
+export const GET_CARS = gql`
+  query Cars {
+    cars {
+      _id
+      name
+    }
+  }
+`;
+
 // client side queries
 
 export const IS_LOGGED_IN = gql`

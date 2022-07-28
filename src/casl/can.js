@@ -9,7 +9,7 @@ const checkAbility = (action, subject) => {
 
 store.subscribe(() => {
   let auth = store.getState().auth;
-  ability.update(defineRulesFor(auth?.user.role));
+  auth?.user && ability.update(defineRulesFor(auth?.user.role));
 });
 
 const defineRulesFor = (role) => {
