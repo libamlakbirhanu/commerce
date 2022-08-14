@@ -11,7 +11,7 @@ import { isLoggedInVar, user } from "./store";
 import { typeDefs } from "./graphql/clientTypedefs";
 
 export const client = new ApolloClient({
-  uri: "http://localhost:5001/graphql",
+  uri: "http://localhost:5000/graphql",
   cache: new InMemoryCache({
     typePolicies: {
       AuthPayload: {
@@ -26,9 +26,20 @@ export const client = new ApolloClient({
           },
           user: {
             read() {
-              return user()
-            }
-          }
+              return user();
+            },
+          },
+          products: {
+            merge(existing, incoming, { args: { productInput: {offset = 0} } }) {
+              // Slicing is necessary because the existing data is
+              // immutable, and frozen in development.
+              const merged = existing ? existing.slice(0) : [];
+              for (let i = 0; i < incoming.length; ++i) {
+                merged[offset + i] = incoming[i];
+              }
+              return merged;
+            },
+          },
         },
       },
     },
