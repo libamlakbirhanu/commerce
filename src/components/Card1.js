@@ -54,7 +54,7 @@ const useStyles = createStyles((theme) => ({
   },
 }));
 
-function Card1() {
+function Card1({product}) {
   let navigate = useNavigate();
   const { classes } = useStyles();
 
@@ -63,22 +63,22 @@ function Card1() {
       className={classes.wrapper}
       onClick={() => navigate("/detail", { replace: true })}
     >
-      <Image src={shoes} width={170} className={classes.image} mb={10} />
+      <Image src={product.image} width={170} className={classes.image} mb={10} />
       <div style={{ display: "flex", flexDirection: "column", gap: "0.1rem" }}>
         <Text className={classes.largeText} size="lg" color="gray" weight={600}>
-          Fashion Sports TF Key
+          {product.name}
         </Text>
         <Text className={classes.largeText} size="md" color="#A8803A">
-          Lowest price in 30 days
+          {product.description}
         </Text>
         <Text className={classes.largeText} weight="bold" size="xl">
-          ETB 327.56
+          ETB {product.price}
         </Text>
         <Text className={classes.largeText} size="xs" color="red">
           -40 %
         </Text>
         <Text className={classes.largeText} size="md" color="gray" weight={500}>
-          45 sold
+          {product.sellAmount} sold
         </Text>
       </div>
     </div>

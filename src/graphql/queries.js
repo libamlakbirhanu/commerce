@@ -29,6 +29,19 @@ export const GET_CARS = gql`
   }
 `;
 
+export const GET_PRODUCTS = gql`
+query GetProducts($first: Int!, $offset: Int!) {
+  products(productInput: {first: $first, offset: $offset}) {
+    id
+    name
+    description
+    price
+    sellAmount
+    image
+  }
+}
+`
+
 // client side queries
 
 export const IS_LOGGED_IN = gql`

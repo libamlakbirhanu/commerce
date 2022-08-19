@@ -66,7 +66,7 @@ const useStyles = createStyles((theme) => ({
 }));
 
 function Footer() {
-  const { classes } = useStyles();
+  const { classes, theme } = useStyles();
 
   return (
     <div className={classes.footerWrapper}>
@@ -75,7 +75,7 @@ function Footer() {
           <div className={classes.topItem}>
             <ReportMoney size={40} />
             <Text weight={700}>Top-Preis-Leistungs-Verhältnis</Text>
-            <Text size="sm">
+            <Text size="sm" color={theme.colors.gray[6]}>
               Wir bieten wettbewerbsfähige Preise für mehr als 100 Millionen
               Artikel.
             </Text>
@@ -83,7 +83,7 @@ function Footer() {
           <div className={classes.topItem}>
             <Car size={40} />
             <Text weight={700}>Weltweit einkaufen</Text>
-            <Text size="sm">
+            <Text size="sm" color={theme.colors.gray[6]}>
               Wir liefern in mehr als 200 Länder und Regionen und unsere Website
               ist in mehr als 12 Sprachen verfügbar.
             </Text>
@@ -91,7 +91,7 @@ function Footer() {
           <div className={classes.topItem}>
             <CreditCard size={40} />
             <Text weight={700}>Sichere Bezahlung</Text>
-            <Text size="sm">
+            <Text size="sm" color={theme.colors.gray[6]}>
               Bezahlen Sie mit den weltweit beliebtesten und sichersten
               Zahlungsmethoden.
             </Text>
@@ -99,14 +99,14 @@ function Footer() {
           <div className={classes.topItem}>
             <ShieldCheck size={40} />
             <Text weight={700}>Sicher einkaufen</Text>
-            <Text size="sm">
+            <Text size="sm" color={theme.colors.gray[6]}>
               Unsere Käuferschutzrichtlinie deckt Ihren gesamten Einkauf ab.
             </Text>
           </div>
           <div className={classes.topItem}>
             <Users size={40} />
             <Text weight={700}>Hilfecenter</Text>
-            <Text size="sm">
+            <Text size="sm" color={theme.colors.gray[6]}>
               Rund-um-die-Uhr-Unterstützung für einen reibungslosen Einkauf.
             </Text>
           </div>
@@ -116,7 +116,7 @@ function Footer() {
               <BrandAndroid size={40} />
             </div>
             <Text weight={700}>Besser einkaufen</Text>
-            <Text size="sm">
+            <Text size="sm" color={theme.colors.gray[6]}>
               Laden Sie die App herunter und erhalten Sie reine Mobilfunktionen
               wie beispielsweise Bildersuche und Rabattspiele.
             </Text>

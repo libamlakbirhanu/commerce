@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 // import Swiper core and required modules
 import { useNavigate } from "react-router-dom";
 import { Navigation, Pagination, A11y, Autoplay } from "swiper";
@@ -25,6 +25,8 @@ import productImg from "../assets/product.jpg";
 import { Settings, List } from "tabler-icons-react";
 import Card2 from "../components/Card2";
 import Card1 from "../components/Card1";
+import { useQuery } from "@apollo/client";
+import { GET_PRODUCTS } from "../graphql/queries";
 
 const useStyles = createStyles((theme) => ({
   categories: {
@@ -135,9 +137,12 @@ const useStyles = createStyles((theme) => ({
 }));
 
 function Index() {
+  const [page, setPage] = useState(0);
   let navigate = useNavigate();
-  const theme = useMantineTheme();
   const { classes } = useStyles();
+  const { loading, error, data, fetchMore } = useQuery(GET_PRODUCTS, {
+    variables: { first: 5, offset: page * 5 },
+  });
 
   const categories = [
     "Women's fashion",
@@ -181,6 +186,14 @@ function Index() {
       </Menu>
     </li>
   ));
+
+  const increment = () => {
+    setPage((prev) => prev + 1);
+  }
+
+  const decrement = () => {
+    setPage((prev) => prev - 1);
+  }
 
   return (
     <div>
@@ -376,19 +389,36 @@ function Index() {
         </div>
       </div>
 
-      <div style={{ marginTop: "2rem" }}>
-        <Text size="xl" weight="700" mb={20}>
-          More to love
-        </Text>
+      {loading ? (
+        <p>loading...</p>
+      ) : error ? (
+        <p>Something went wrong. Please try refreshing the page</p>
+      ) : (
+        <div style={{ marginTop: "2rem" }}>
+          <Text size="xl" weight="700" mb={20}>
+            More to love
+          </Text>
 
-        <SimpleGrid cols={6} spacing="sm">
-          {Array(30)
-            .fill()
-            .map((_, i) => (
-              <Card1 />
+          <SimpleGrid
+            cols={6}
+            spacing="sm"
+            breakpoints={[
+              { maxWidth: "lg", cols: 5, spacing: "lg" },
+              { maxWidth: "md", cols: 3, spacing: "md" },
+              { maxWidth: "sm", cols: 2, spacing: "sm" },
+              { maxWidth: "xs", cols: 1, spacing: "sm" },
+            ]}
+          >
+            {data.products.map((product, i) => (
+              <Card1 product={product} key={product.id} />
             ))}
-        </SimpleGrid>
-      </div>
+          </SimpleGrid>
+
+          <div style={{ marginTop: "2rem" }}></div>
+          <button style={{cursor: 'pointer'}} disabled={page <= 0} onClick={decrement}>prev</button>
+          <button style={{cursor: 'pointer'}} onClick={increment}>next</button>
+        </div>
+      )}
     </div>
   );
 }
