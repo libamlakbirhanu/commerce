@@ -1,17 +1,14 @@
 import { createStyles, Grid, Image, Text } from "@mantine/core";
 import React from "react";
-import { GlassMagnifier } from "react-image-magnifiers";
+import { SideBySideMagnifier } from "react-image-magnifiers";
 import { ChevronDown, Star } from "tabler-icons-react";
 // import bikini from "../assets/bikini.png";
 import dog from "../assets/dog.jpg";
 
 const useStyles = createStyles((theme) => ({
   magnifier: {
-    height: "100%",
-    display: "flex",
-    alignItems: "center",
     img: {
-      objectFit: "cover !important",
+      objectFit: "cover",
     },
   },
   smallImage: {
@@ -26,13 +23,15 @@ function Detail() {
 
   return (
     <Grid gutter="md">
-      <Grid.Col span={4} style={{ height: "450px" }}>
-        <GlassMagnifier
+      <Grid.Col span={4}>
+        <SideBySideMagnifier
           className={classes.magnifier}
           imageSrc={dog}
           imageAlt="Product image"
-          magnifierSize="100%"
-          square
+          alwaysInPlace={false}
+          fillAvailableSpace={true}
+          fillAlignTop={true}
+          // style={{ maxHeight: "450px" }}
         />
       </Grid.Col>
       <Grid.Col span={6}>

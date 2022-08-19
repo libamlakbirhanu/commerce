@@ -11,7 +11,7 @@ import { isLoggedInVar, user } from "./store";
 import { typeDefs } from "./graphql/clientTypedefs";
 
 export const client = new ApolloClient({
-  uri: "http://localhost:5001/graphql",
+  uri: "https://commerce.api.oddatech.com/graphql",
   cache: new InMemoryCache({
     typePolicies: {
       AuthPayload: {
