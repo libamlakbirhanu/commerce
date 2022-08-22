@@ -8,6 +8,8 @@ import Detail from "./pages/detail";
 import Login from "./pages/login";
 import Register from "./pages/register";
 import Home from "./pages/home";
+import UserRoleChoice from "./pages/userRoleChoice";
+import Store from "./pages/store";
 
 function App() {
   return (
@@ -15,6 +17,8 @@ function App() {
       <Container size="xl">
         <Routes>
           <Route path="/" element={<Index />} />
+          <Route path="role-choice" element={<UserRoleChoice />} />
+          <Route path="store" element={<Store />} />
           <Route path="home" element={<Home />} />
           <Route path="about" element={<About />} />
           <Route path="detail" element={<Detail />} />
