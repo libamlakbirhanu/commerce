@@ -7,6 +7,7 @@ import {
   Card,
   Select,
   Text,
+  Paper,
 } from "@mantine/core";
 import { useForm, formList } from "@mantine/form";
 import { useNetwork } from "@mantine/hooks";
@@ -26,24 +27,53 @@ function Products() {
       description: "",
       category: "",
       brand: "",
-      attributes: formList([{ name: "", description: "" }]),
+      attributes: formList([
+        {
+          name: "",
+          description: "",
+          attributeOptions: formList([{ name: "" }]),
+        },
+      ]),
     },
   });
 
   const attributeFields = form.values.attributes.map((item, index) => (
-    <Group key={item.key} mt="xs">
-      <TextInput
-        placeholder="John Doe"
-        required
-        sx={{ flex: 1 }}
-        {...form.getListInputProps("attributes", index, "name")}
-      />
-      <TextInput
-        placeholder="Short description"
-        sx={{ flex: 2 }}
-        {...form.getListInputProps("attributes", index, "description")}
-      />
-    </Group>
+    <Paper shadow="md" p="md" mb={20} mt={10} key={uuid()}>
+      <Group>
+        <TextInput
+          placeholder="John Doe"
+          required
+          sx={{ flex: 1 }}
+          {...form.getListInputProps("attributes", index, "name")}
+        />
+        <TextInput
+          placeholder="Short description"
+          sx={{ flex: 2 }}
+          {...form.getListInputProps("attributes", index, "description")}
+        />
+      </Group>
+      <Group mt="sm">
+        <Button
+          sx={{ flex: 1 }}
+          onClick={() =>
+            form.addListItem(`attributes.${index}.attributeOptions`, {
+              name: "",
+            })
+          }
+        >
+          add options
+        </Button>
+
+        {item.attributeOptions.map((option, i) => (
+          <TextInput
+            key={uuid()}
+            placeholder="Short description"
+            style={{ width: "100%" }}
+            {...form.getListInputProps("attributeOptions", i, "name")}
+          />
+        ))}
+      </Group>
+    </Paper>
   ));
 
   const [createProduct, { data: productData, loading: productLoading }] =
@@ -92,19 +122,20 @@ function Products() {
   // };
 
   const addProduct = (values) => {
-    createProduct({
-      variables: {
-        category_id: values.category,
-        store_id: "07fd3e0d-3a2b-4bb7-9048-141c6e4eb12d",
-        attributes: values.attributes.map((attribute) =>
-          attribute.name ? attribute : null
-        ),
-        brand_id: values.brand,
-        sku: uuid(),
-        name: values.name,
-        description: values.description,
-      },
-    });
+    console.log(values);
+    // createProduct({
+    //   variables: {
+    //     category_id: values.category,
+    //     store_id: "07fd3e0d-3a2b-4bb7-9048-141c6e4eb12d",
+    //     attributes: values.attributes.map((attribute) =>
+    //       attribute.name ? attribute : null
+    //     ),
+    //     brand_id: values.brand,
+    //     sku: uuid(),
+    //     name: values.name,
+    //     description: values.description,
+    //   },
+    // });
   };
 
   if (!networkStatus.online)
@@ -121,7 +152,6 @@ function Products() {
         }}
         title="Add product"
         size="lg"
-        fullScreen
       >
         <form onSubmit={form.onSubmit((values) => addProduct(values))}>
           <TextInput
@@ -180,11 +210,17 @@ function Products() {
           <Text weight={500} size="sm">
             Attributes
           </Text>
+
           {attributeFields}
+
           <Button
             mt={10}
             onClick={() =>
-              form.addListItem("attributes", { name: "", description: "" })
+              form.addListItem("attributes", {
+                name: "",
+                description: "",
+                attributeOptions: [],
+              })
             }
           >
             +
