@@ -1,7 +1,11 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  user: null,
+  user: {
+    name: "libe",
+    role: "store-owner",
+  },
+  firstEntrance: true,
 };
 
 export const authSlice = createSlice({
@@ -13,11 +17,14 @@ export const authSlice = createSlice({
       // doesn't actually mutate the state because it uses the Immer library,
       // which detects changes to a "draft state" and produces a brand new
       // immutable state based off those changes
-      
+
       state.user = { ...payload.payload, role: "admin" };
     },
     logout: (state) => {
       state.user = null;
+    },
+    switchFirstEntrance: (state) => {
+      state.firstEntrance = false;
     },
   },
 });
