@@ -7,6 +7,7 @@ module.exports = function override(config) {
     "@ability": "src/casl",
     "@assets": "src/assets",
     "@graphql": "src/graphql",
+    "@redux": "src/redux",
   })(config);
 
   return config;
