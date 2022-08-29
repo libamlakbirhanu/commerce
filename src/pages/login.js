@@ -95,11 +95,13 @@ const Login = () => {
       if (res.data.login) {
         localStorage.setItem("token", res.data.login.access_token);
         localStorage.setItem("userId", res.data.login.user.id);
+
         isLoggedInVar(true);
         user(res.data.login.user);
+        
+        dispatch(authLogin(res.data.login.user));
+        navigate("/", { replace: true });
       }
-      dispatch(authLogin(res.data.login.user));
-      navigate("/", { replace: true });
     } catch (err) {
       console.log(err);
     }
