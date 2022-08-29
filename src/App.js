@@ -1,7 +1,7 @@
 import { Container } from "@mantine/core";
-import React from "react";
+import React, { useEffect } from "react";
 import { Routes, Route, Link, Navigate } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import Layout from "./components/layout/Layout";
 import About from "./pages/about";
 import Index from "./pages/index";
@@ -14,11 +14,18 @@ import Store from "./pages/store";
 import Products from "./pages/products";
 import Unauthorized from "./pages/unauthorized";
 import CAN from "@ability/can";
+import { authLogin, switchFirstEntrance } from "@redux/authSlice";
 
 function App() {
   const auth = useSelector((state) => state.auth);
-  
-  return (
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(authLogin({ name: "libe" }));
+    dispatch(switchFirstEntrance());
+  }, []);
+
+  return auth.firstEntrance ? null : (
     <Layout>
       <Container size="xl">
         <Routes>
