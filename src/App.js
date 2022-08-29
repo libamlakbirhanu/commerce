@@ -9,6 +9,8 @@ import Detail from "./pages/detail";
 import Login from "./pages/login";
 import Register from "./pages/register";
 import Home from "./pages/home";
+import UserRoleChoice from "./pages/userRoleChoice";
+import Store from "./pages/store";
 import Products from "./pages/products";
 import Unauthorized from "./pages/unauthorized";
 import CAN from "@ability/can";
@@ -21,6 +23,8 @@ function App() {
       <Container size="xl">
         <Routes>
           <Route path="/" element={<Index />} />
+          <Route path="role-choice" element={<UserRoleChoice />} />
+          <Route path="store" element={<Store />} />
           <Route
             path="home"
             element={!auth.user ? <Navigate replace to="/login" /> : <Home />}
@@ -45,6 +49,7 @@ function App() {
             path="detail"
             element={!auth.user ? <Navigate replace to="/login" /> : <Detail />}
           />
+
           <Route path="login" element={<Login />} />
           <Route path="register" element={<Register />} />
           <Route path="unauthorized" element={<Unauthorized />} />

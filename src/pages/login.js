@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback } from "react";
 import { useMutation } from "@apollo/client";
 import * as Yup from "yup";
 import { useForm, yupResolver } from "@mantine/form";
@@ -69,7 +69,7 @@ const schema = Yup.object().shape({
 
 const Login = () => {
   const dispatch = useDispatch();
-  const [login, { data, loading, error }] = useMutation(LOGIN);
+  const [login, { loading, error, reset }] = useMutation(LOGIN);
   const navigate = useNavigate();
   const { classes } = useStyles();
 
@@ -81,7 +81,7 @@ const Login = () => {
     },
   });
 
-  const handleSubmit = async (values) => {
+  const memoizedSubmit = useCallback(async (values) => {
     try {
       const res = await login({
         variables: {
@@ -104,13 +104,17 @@ const Login = () => {
       }
     } catch (err) {
       console.log(err);
+      setTimeout(() => {
+        reset();
+      }, 2000);
     }
-  };
+  }, []);
 
+  console.log("rendered");
   return (
     <div className={classes.wrapper}>
       <Paper className={classes.form} radius={0} p={30}>
-        <form onSubmit={form.onSubmit((values) => handleSubmit(values))}>
+        <form onSubmit={form.onSubmit((values) => memoizedSubmit(values))}>
           <Title
             order={2}
             className={classes.title}

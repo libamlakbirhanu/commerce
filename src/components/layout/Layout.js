@@ -1,13 +1,16 @@
 import Footer from "./Footer";
 import React from "react";
+import { useLocation } from "react-router-dom";
 import HeaderNav from "./Header";
 
 function Layout({ children }) {
+  let location = useLocation();
+  console.log(location);
   return (
     <>
-      <HeaderNav />
+      {location.pathname !== "/role-choice" && <HeaderNav />}
       {children}
-      <Footer />
+      {location.pathname !== "/role-choice" && <Footer />}
     </>
   );
 }
