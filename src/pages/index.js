@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 // import Swiper core and required modules
 import { useNavigate } from "react-router-dom";
 import { Navigation, Pagination, A11y, Autoplay } from "swiper";
@@ -12,8 +12,10 @@ import {
   Text,
   SimpleGrid,
 } from "@mantine/core";
+import uuid from "react-uuid";
 
 import { Swiper, SwiperSlide } from "swiper/react";
+import { InView } from "react-intersection-observer";
 
 // Import Swiper styles
 import "swiper/css";
@@ -25,7 +27,7 @@ import productImg from "../assets/product.jpg";
 import { Settings, List } from "tabler-icons-react";
 import Card2 from "../components/Card2";
 import Card1 from "../components/Card1";
-import { useQuery } from "@apollo/client";
+import { useLazyQuery, useQuery } from "@apollo/client";
 import { GET_PRODUCTS } from "../graphql/queries";
 
 const useStyles = createStyles((theme) => ({
@@ -140,9 +142,16 @@ function Index() {
   const [page, setPage] = useState(0);
   let navigate = useNavigate();
   const { classes } = useStyles();
-  const { loading, error, data, fetchMore } = useQuery(GET_PRODUCTS, {
-    variables: { first: 5, offset: page * 5 },
-  });
+  const [getProducts, { loading, error, data, fetchMore }] = useLazyQuery(
+    GET_PRODUCTS,
+    {
+      variables: { first: 5, page: page },
+    }
+  );
+
+  useEffect(() => {
+    getProducts();
+  }, []);
 
   const categories = [
     "Women's fashion",
@@ -161,7 +170,7 @@ function Index() {
   ];
 
   const catItems = categories.map((cat, index) => (
-    <li className={classes.catItem}>
+    <li key={uuid()} className={classes.catItem}>
       <Menu
         key="123"
         trigger="hover"
@@ -189,11 +198,11 @@ function Index() {
 
   const increment = () => {
     setPage((prev) => prev + 1);
-  }
+  };
 
   const decrement = () => {
     setPage((prev) => prev - 1);
-  }
+  };
 
   return (
     <div>
@@ -380,7 +389,7 @@ function Index() {
           </div>
           <Text weight={300}>VIEW MORE</Text>
         </div>
-        <div className={classes.weeklyDealsImages}>
+        <div className={classes.weeklyDealsImages} onClick={() => navigate('/products')}>
           <Card2 />
           <Card2 />
           <Card2 />
@@ -393,7 +402,7 @@ function Index() {
         <p>loading...</p>
       ) : error ? (
         <p>Something went wrong. Please try refreshing the page</p>
-      ) : (
+      ) : data ? (
         <div style={{ marginTop: "2rem" }}>
           <Text size="xl" weight="700" mb={20}>
             More to love
@@ -409,16 +418,26 @@ function Index() {
               { maxWidth: "xs", cols: 1, spacing: "sm" },
             ]}
           >
-            {data.products.map((product, i) => (
+            {data.products.data.map((product, i) => (
               <Card1 product={product} key={product.id} />
             ))}
           </SimpleGrid>
 
           <div style={{ marginTop: "2rem" }}></div>
-          <button style={{cursor: 'pointer'}} disabled={page <= 0} onClick={decrement}>prev</button>
-          <button style={{cursor: 'pointer'}} onClick={increment}>next</button>
+
+          {!data.products.data.length ? (
+            <InView
+              onChange={async (inView) => {
+                if (inView) {
+                  getProducts({
+                    variables: { first: 5, page },
+                  });
+                }
+              }}
+            />
+          ) : null}
         </div>
-      )}
+      ) : null}
     </div>
   );
 }
