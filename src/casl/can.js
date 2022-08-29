@@ -25,11 +25,8 @@ const defineRulesFor = (role) => {
       can("read", "Product");
       can("read", "Inventory");
       break;
-    case "projectLead":
-      can("manage", "Report");
-      break;
-    case "sales":
-      can("manage", "SalesOrder");
+    case "store-owner":
+      can("manage", "store");
       break;
     default:
       can("read", "all");
