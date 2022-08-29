@@ -7,7 +7,7 @@ import {
   Burger,
   Image,
   Container,
-  Badge,
+  Drawer,
   Indicator,
   Menu,
   Text,
@@ -114,76 +114,86 @@ const HeaderNav = () => {
   ));
 
   return (
-    <Header height={56} className={classes.header} mb={30}>
-      <Container className={classes.inner} size="xl">
-        <Group mr={50}>
-          <Burger opened={opened} onClick={() => toggleOpened()} size="sm" />
-          <Image
-            src={logo}
-            width={60}
-            style={{ cursor: "pointer" }}
-            onClick={() => navigate("/", { replace: true })}
-          />
-        </Group>
+    <>
+      <Drawer
+        opened={opened}
+        onClose={() => toggleOpened()}
+        title="Menu"
+        padding="xl"
+        size="md"
+      ></Drawer>
 
-        <Autocomplete
-          className={classes.search}
-          placeholder="Search"
-          icon={<Search size={16} />}
-          data={[
-            "React",
-            "Angular",
-            "Vue",
-            "Next.js",
-            "Riot.js",
-            "Svelte",
-            "Blitz.js",
-          ]}
-        />
-        <div style={{marginLeft: 50}}>
-          <Menu
-            width={200}
-            control={
-              <Indicator
-                inline
-                label="3"
-                size={16}
-                color="red"
-                style={{ cursor: "pointer" }}
-              >
-                <ShoppingCart size={30} />
-              </Indicator>
-            }
-          >
-            {/* <Menu.Dropdown>
-            <Menu.Label>Application</Menu.Label> */}
-            <Menu.Item icon={<Settings size={14} />}>Settings</Menu.Item>
-            <Menu.Item icon={<MessageCircle size={14} />}>Messages</Menu.Item>
-            <Menu.Item icon={<Photo size={14} />}>Gallery</Menu.Item>
-            <Menu.Item
-              icon={<Search size={14} />}
-              rightSection={
-                <Text size="xs" color="dimmed">
-                  ⌘K
-                </Text>
+      <Header height={56} className={classes.header} mb={30}>
+        <Container className={classes.inner} size="xl">
+          <Group mr={50}>
+            <Burger onClick={() => toggleOpened()} size="sm" />
+            <Image
+              src={logo}
+              width={60}
+              style={{ cursor: "pointer" }}
+              onClick={() => navigate("/", { replace: true })}
+            />
+          </Group>
+
+          <Autocomplete
+            className={classes.search}
+            placeholder="Search"
+            icon={<Search size={16} />}
+            data={[
+              "React",
+              "Angular",
+              "Vue",
+              "Next.js",
+              "Riot.js",
+              "Svelte",
+              "Blitz.js",
+            ]}
+          />
+          <div style={{ marginLeft: 50 }}>
+            <Menu
+              width={200}
+              control={
+                <Indicator
+                  inline
+                  label="3"
+                  size={16}
+                  color="red"
+                  style={{ cursor: "pointer" }}
+                >
+                  <ShoppingCart size={30} />
+                </Indicator>
               }
             >
-              Search
-            </Menu.Item>
-            <Divider />
-            <Menu.Label>Danger zone</Menu.Label>
-            <Menu.Item icon={<ArrowsLeftRight size={14} />}>
-              Transfer my data
-            </Menu.Item>
-            ,
-            <Menu.Item color="red" icon={<Trash size={14} />}>
-              Delete my account
-            </Menu.Item>
-            {/* </Menu.Dropdown> */}
-          </Menu>
-        </div>
-      </Container>
-    </Header>
+              {/* <Menu.Dropdown>
+            <Menu.Label>Application</Menu.Label> */}
+              <Menu.Item icon={<Settings size={14} />}>Settings</Menu.Item>
+              <Menu.Item icon={<MessageCircle size={14} />}>Messages</Menu.Item>
+              <Menu.Item icon={<Photo size={14} />}>Gallery</Menu.Item>
+              <Menu.Item
+                icon={<Search size={14} />}
+                rightSection={
+                  <Text size="xs" color="dimmed">
+                    ⌘K
+                  </Text>
+                }
+              >
+                Search
+              </Menu.Item>
+              <Divider />
+              <Menu.Label>Danger zone</Menu.Label>
+              <Menu.Item icon={<ArrowsLeftRight size={14} />}>
+                Transfer my data
+              </Menu.Item>
+              ,
+              <Menu.Item color="red" icon={<Trash size={14} />}>
+                Delete my account
+              </Menu.Item>
+              {/* </Menu.Dropdown> */}
+            </Menu>
+          </div>
+        </Container>
+      </Header>
+    </>
   );
 };
 
