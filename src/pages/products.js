@@ -31,17 +31,17 @@ function Products() {
         {
           name: "",
           description: "",
-          attributeOptions: [{ name: "" }],
+          attributeOptions: { create: [] },
         },
       ],
     },
   });
 
   const attributeFields = form.values.attributes.map((item, index) => (
-    <Paper shadow="md" p="md" mb={20} mt={10} key={uuid()}>
+    <Card shadow="sm" p="lg" radius="md" mb={10} withBorder key={index}>
       <Group>
         <TextInput
-          placeholder="John Doe"
+          placeholder="Attribute name"
           required
           sx={{ flex: 1 }}
           {...form.getInputProps(`attributes.${index}.name`)}
@@ -56,7 +56,7 @@ function Products() {
         <Button
           sx={{ flex: 1 }}
           onClick={() =>
-            form.insertListItem(`attributes.${index}.attributeOptions`, {
+            form.insertListItem(`attributes.${index}.attributeOptions.create`, {
               name: "",
             })
           }
@@ -64,16 +64,19 @@ function Products() {
           add options
         </Button>
 
-        {item.attributeOptions.map((option, i) => (
-          <TextInput
-            key={uuid()}
-            placeholder="Short description"
-            style={{ width: "100%" }}
-            {...form.getInputProps(`attributes.${index}.name.attributeOptions.${i}.name`)}
-          />
-        ))}
+        {item.attributeOptions.create.length > 0 &&
+          item.attributeOptions.create.map((_, i) => (
+            <TextInput
+              key={i}
+              placeholder="Attribute option"
+              style={{ width: "100%" }}
+              {...form.getInputProps(
+                `attributes.${index}.attributeOptions.create.${i}.name`
+              )}
+            />
+          ))}
       </Group>
-    </Paper>
+    </Card>
   ));
 
   const [createProduct, { data: productData, loading: productLoading }] =
@@ -122,20 +125,17 @@ function Products() {
   // };
 
   const addProduct = (values) => {
-    console.log(values);
-    // createProduct({
-    //   variables: {
-    //     category_id: values.category,
-    //     store_id: "07fd3e0d-3a2b-4bb7-9048-141c6e4eb12d",
-    //     attributes: values.attributes.map((attribute) =>
-    //       attribute.name ? attribute : null
-    //     ),
-    //     brand_id: values.brand,
-    //     sku: uuid(),
-    //     name: values.name,
-    //     description: values.description,
-    //   },
-    // });
+    createProduct({
+      variables: {
+        category_id: values.category,
+        store_id: "07fd3e0d-3a2b-4bb7-9048-141c6e4eb12d",
+        attributes: [...values.attributes],
+        brand_id: values.brand,
+        sku: uuid(),
+        name: values.name,
+        description: values.description,
+      },
+    });
   };
 
   if (!networkStatus.online)
