@@ -24,7 +24,7 @@ import "swiper/css/pagination";
 import "swiper/css/autoplay";
 import { Image } from "@mantine/core";
 import productImg from "../assets/product.jpg";
-import { Settings, List } from "tabler-icons-react";
+import { IconSettings, IconList } from "@tabler/icons";
 import Card2 from "../components/Card2";
 import Card1 from "../components/Card1";
 import { useLazyQuery, useQuery } from "@apollo/client";
@@ -73,7 +73,7 @@ const useStyles = createStyles((theme) => ({
     cursor: "pointer",
 
     "&:hover": {
-      transform: "translate(2px, -2px)",
+      transform: "translate(-8px, -2px)",
       boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.1)",
       fontWeight: "bold",
     },
@@ -176,22 +176,23 @@ function Index() {
         trigger="hover"
         delay={0}
         transitionDuration={0}
-        placement="start"
         gutter={1}
-        position="right"
-        control={
-          <div className={classes.control}>
-            <Settings size={20} color="rgba(0,0,0,.5)" />
-            <span className={classes.linkLabel}>{cat}</span>
-          </div>
-        }
+        position="right-start"
         className={classes.menu}
       >
-        <Menu.Item>Label</Menu.Item>
-        <Menu.Item key="12">Shoes</Menu.Item>
-        <Menu.Item key="123">Pants</Menu.Item>
-        <Menu.Item key="1234">Balls</Menu.Item>
-        <Menu.Item key="12345">Car</Menu.Item>
+        <Menu.Target>
+          <div className={classes.control}>
+            <IconSettings size={20} color="rgba(0,0,0,.5)" />
+            <span className={classes.linkLabel}>{cat}</span>
+          </div>
+        </Menu.Target>
+        <Menu.Dropdown>
+          <Menu.Item style={{ width: "200px" }}>Label</Menu.Item>
+          <Menu.Item key="12">Shoes</Menu.Item>
+          <Menu.Item key="123">Pants</Menu.Item>
+          <Menu.Item key="1234">Balls</Menu.Item>
+          <Menu.Item key="12345">Car</Menu.Item>
+        </Menu.Dropdown>
       </Menu>
     </li>
   ));
@@ -220,7 +221,7 @@ function Index() {
                   marginBottom: ".6rem",
                 }}
               >
-                <List size={20} />
+                <IconList size={20} />
                 Categories
               </div>
               {catItems}
@@ -389,7 +390,10 @@ function Index() {
           </div>
           <Text weight={300}>VIEW MORE</Text>
         </div>
-        <div className={classes.weeklyDealsImages} onClick={() => navigate('/products')}>
+        <div
+          className={classes.weeklyDealsImages}
+          onClick={() => navigate("/products")}
+        >
           <Card2 />
           <Card2 />
           <Card2 />

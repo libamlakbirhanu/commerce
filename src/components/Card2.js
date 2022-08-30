@@ -1,6 +1,6 @@
 import { createStyles, Image, Text } from "@mantine/core";
 import React from "react";
-import { ArrowWaveRightDown } from "tabler-icons-react";
+import { IconArrowWaveRightUp } from "@tabler/icons";
 import watch from "../assets/watch.jpg";
 
 const useStyles = createStyles((theme) => ({
@@ -30,7 +30,7 @@ function Card2() {
         ETB 327.56
       </Text>
       <span className={classes.percentage}>
-        <ArrowWaveRightDown color="white" /> -35%
+        <IconArrowWaveRightUp color="white" /> -35%
       </span>
     </div>
   );

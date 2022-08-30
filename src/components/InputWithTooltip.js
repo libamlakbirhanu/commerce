@@ -1,5 +1,5 @@
 import { TextInput, Tooltip, Center, Text } from "@mantine/core";
-import { InfoCircle } from "tabler-icons-react";
+import { IconInfoCircle } from "@tabler/icons";
 
 export default function TooltipIcon({
   label,
@@ -17,7 +17,7 @@ export default function TooltipIcon({
     >
       <Text color="dimmed" sx={{ cursor: "help" }}>
         <Center>
-          <InfoCircle size={18} />
+          <IconInfoCircle size={18} />
         </Center>
       </Text>
     </Tooltip>

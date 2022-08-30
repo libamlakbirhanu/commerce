@@ -1,11 +1,5 @@
-// import { MessageCircle, EyeCheck } from "tabler-icons-react";
-import {
-  Card,
-  Text,
-  Group,
-  createStyles,
-  SimpleGrid,
-} from "@mantine/core";
+// import { MessageCircle, EyeCheck } from "@tabler/icons";
+import { Card, Text, Group, createStyles, SimpleGrid } from "@mantine/core";
 import logo from "../assets/logo192.png";
 
 const useStyles = createStyles((theme, _params, getRef) => {
@@ -21,16 +15,17 @@ const useStyles = createStyles((theme, _params, getRef) => {
       top: 0,
       bottom: 0,
 
-      '&:before': {
+      "&:before": {
         content: '""',
         position: "absolute",
         left: 0,
         right: 0,
         top: 0,
         bottom: 0,
-        background: "linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, .85) 90%)",
-
-    }},
+        background:
+          "linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, .85) 90%)",
+      },
+    },
     center: {
       position: "absolute",
       top: "50%",

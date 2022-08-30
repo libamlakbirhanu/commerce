@@ -1,7 +1,7 @@
 import { createStyles, Grid, Image, Text } from "@mantine/core";
 import React from "react";
 import { SideBySideMagnifier } from "react-image-magnifiers";
-import { ChevronDown, Star } from "tabler-icons-react";
+import { IconChevronDown, IconStar } from "@tabler/icons";
 // import bikini from "../assets/bikini.png";
 import dog from "../assets/dog.jpg";
 
@@ -45,15 +45,15 @@ function Detail() {
           </Text>
           <div style={{ display: "flex", gap: "1rem" }}>
             <div style={{ display: "flex", alignItems: "center" }}>
-              <Star fill="orange" size={18} color="orange" />
-              <Star fill="orange" size={18} color="orange" />
-              <Star fill="orange" size={18} color="orange" />
-              <Star fill="orange" size={18} color="orange" />
-              <Star color="orange" size={18} />
+              <IconStar fill="orange" size={18} color="orange" />
+              <IconStar fill="orange" size={18} color="orange" />
+              <IconStar fill="orange" size={18} color="orange" />
+              <IconStar fill="orange" size={18} color="orange" />
+              <IconStar color="orange" size={18} />
             </div>
             <div style={{ display: "flex", alignItems: "center" }}>
               4.7
-              <ChevronDown size={12} />
+              <IconChevronDown size={12} />
               <Text ml={10} color="gray">
                 73 Bewertungen
               </Text>

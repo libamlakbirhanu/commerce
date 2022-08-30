@@ -13,16 +13,16 @@ import {
   Text,
   Divider,
 } from "@mantine/core";
-import { useBooleanToggle } from "@mantine/hooks";
+import { useToggle } from "@mantine/hooks";
 import {
-  Search,
-  ShoppingCart,
-  Settings,
-  Photo,
-  MessageCircle,
-  Trash,
-  ArrowsLeftRight,
-} from "tabler-icons-react";
+  IconSearch,
+  IconShoppingCart,
+  IconSettings,
+  IconPhoto,
+  IconMessageCircle,
+  IconTrash,
+  IconArrowsLeftRight,
+} from "@tabler/icons";
 import logo from "../../assets/logo192.png";
 import { useNavigate } from "react-router-dom";
 
@@ -97,7 +97,7 @@ const data = {
 
 const HeaderNav = () => {
   let navigate = useNavigate();
-  const [opened, toggleOpened] = useBooleanToggle(false);
+  const [opened, toggleOpened] = useToggle([false, true]);
   const { classes } = useStyles();
 
   const { links } = data;
@@ -138,7 +138,7 @@ const HeaderNav = () => {
           <Autocomplete
             className={classes.search}
             placeholder="Search"
-            icon={<Search size={16} />}
+            icon={<IconSearch size={16} />}
             data={[
               "React",
               "Angular",
@@ -150,9 +150,8 @@ const HeaderNav = () => {
             ]}
           />
           <div style={{ marginLeft: 50 }}>
-            <Menu
-              width={200}
-              control={
+            <Menu width={200} position="bottom-end">
+              <Menu.Target>
                 <Indicator
                   inline
                   label="3"
@@ -160,35 +159,37 @@ const HeaderNav = () => {
                   color="red"
                   style={{ cursor: "pointer" }}
                 >
-                  <ShoppingCart size={30} />
+                  <IconShoppingCart size={30} />
                 </Indicator>
-              }
-            >
-              {/* <Menu.Dropdown>
-            <Menu.Label>Application</Menu.Label> */}
-              <Menu.Item icon={<Settings size={14} />}>Settings</Menu.Item>
-              <Menu.Item icon={<MessageCircle size={14} />}>Messages</Menu.Item>
-              <Menu.Item icon={<Photo size={14} />}>Gallery</Menu.Item>
-              <Menu.Item
-                icon={<Search size={14} />}
-                rightSection={
-                  <Text size="xs" color="dimmed">
-                    ⌘K
-                  </Text>
-                }
-              >
-                Search
-              </Menu.Item>
-              <Divider />
-              <Menu.Label>Danger zone</Menu.Label>
-              <Menu.Item icon={<ArrowsLeftRight size={14} />}>
-                Transfer my data
-              </Menu.Item>
-              ,
-              <Menu.Item color="red" icon={<Trash size={14} />}>
-                Delete my account
-              </Menu.Item>
-              {/* </Menu.Dropdown> */}
+              </Menu.Target>
+              <Menu.Dropdown>
+                {/* <Menu.Label>Application</Menu.Label> */}
+                <Menu.Item icon={<IconSettings size={14} />}>
+                  Settings
+                </Menu.Item>
+                <Menu.Item icon={<IconMessageCircle size={14} />}>
+                  Messages
+                </Menu.Item>
+                <Menu.Item icon={<IconPhoto size={14} />}>Gallery</Menu.Item>
+                <Menu.Item
+                  icon={<IconSearch size={14} />}
+                  rightSection={
+                    <Text size="xs" color="dimmed">
+                      ⌘K
+                    </Text>
+                  }
+                >
+                  Search
+                </Menu.Item>
+                <Divider />
+                <Menu.Label>Danger zone</Menu.Label>
+                <Menu.Item icon={<IconArrowsLeftRight size={14} />}>
+                  Transfer my data
+                </Menu.Item>
+                <Menu.Item color="red" icon={<IconTrash size={14} />}>
+                  Delete my account
+                </Menu.Item>
+              </Menu.Dropdown>
             </Menu>
           </div>
         </Container>

@@ -1,20 +1,20 @@
 import React from "react";
 import { createStyles, Container, Text } from "@mantine/core";
 import {
-  Settings,
-  BrandFacebook,
-  BrandTwitter,
-  BrandInstagram,
-  BrandMessenger,
-  BrandWhatsapp,
-  ReportMoney,
-  Car,
-  CreditCard,
-  ShieldCheck,
-  Users,
-  BrandApple,
-  BrandAndroid,
-} from "tabler-icons-react";
+  IconSettings,
+  IconBrandFacebook,
+  IconBrandTwitter,
+  IconBrandInstagram,
+  IconBrandMessenger,
+  IconBrandWhatsapp,
+  IconReportMoney,
+  IconCar,
+  IconCreditCard,
+  IconShieldCheck,
+  IconUsers,
+  IconBrandApple,
+  IconBrandAndroid,
+} from "@tabler/icons";
 
 const useStyles = createStyles((theme) => ({
   footerWrapper: {
@@ -73,7 +73,7 @@ function Footer() {
       <Container size="xl">
         <div className={classes.footerTop}>
           <div className={classes.topItem}>
-            <ReportMoney size={40} />
+            <IconReportMoney size={40} />
             <Text weight={700}>Top-Preis-Leistungs-Verhältnis</Text>
             <Text size="sm" color={theme.colors.gray[6]}>
               Wir bieten wettbewerbsfähige Preise für mehr als 100 Millionen
@@ -81,7 +81,7 @@ function Footer() {
             </Text>
           </div>
           <div className={classes.topItem}>
-            <Car size={40} />
+            <IconCar size={40} />
             <Text weight={700}>Weltweit einkaufen</Text>
             <Text size="sm" color={theme.colors.gray[6]}>
               Wir liefern in mehr als 200 Länder und Regionen und unsere Website
@@ -89,7 +89,7 @@ function Footer() {
             </Text>
           </div>
           <div className={classes.topItem}>
-            <CreditCard size={40} />
+            <IconCreditCard size={40} />
             <Text weight={700}>Sichere Bezahlung</Text>
             <Text size="sm" color={theme.colors.gray[6]}>
               Bezahlen Sie mit den weltweit beliebtesten und sichersten
@@ -97,14 +97,14 @@ function Footer() {
             </Text>
           </div>
           <div className={classes.topItem}>
-            <ShieldCheck size={40} />
+            <IconShieldCheck size={40} />
             <Text weight={700}>Sicher einkaufen</Text>
             <Text size="sm" color={theme.colors.gray[6]}>
               Unsere Käuferschutzrichtlinie deckt Ihren gesamten Einkauf ab.
             </Text>
           </div>
           <div className={classes.topItem}>
-            <Users size={40} />
+            <IconUsers size={40} />
             <Text weight={700}>Hilfecenter</Text>
             <Text size="sm" color={theme.colors.gray[6]}>
               Rund-um-die-Uhr-Unterstützung für einen reibungslosen Einkauf.
@@ -112,8 +112,8 @@ function Footer() {
           </div>
           <div className={classes.topItem}>
             <div style={{ display: "flex" }}>
-              <BrandApple size={40} />
-              <BrandAndroid size={40} />
+              <IconBrandApple size={40} />
+              <IconBrandAndroid size={40} />
             </div>
             <Text weight={700}>Besser einkaufen</Text>
             <Text size="sm" color={theme.colors.gray[6]}>
@@ -131,11 +131,11 @@ function Footer() {
               Stay connected
             </Text>
             <div className={classes.brands}>
-              <BrandFacebook size="md" />
-              <BrandTwitter size="md" />
-              <BrandInstagram size="md" />
-              <BrandMessenger size="md" />
-              <BrandWhatsapp size="md" />
+              <IconBrandFacebook size="md" />
+              <IconBrandTwitter size="md" />
+              <IconBrandInstagram size="md" />
+              <IconBrandMessenger size="md" />
+              <IconBrandWhatsapp size="md" />
             </div>
           </div>
           <div className={classes.bottomItem}></div>

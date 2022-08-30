@@ -9,7 +9,7 @@ import {
   Text,
   Paper,
 } from "@mantine/core";
-import { useForm, formList } from "@mantine/form";
+import { useForm } from "@mantine/form";
 import { useNetwork } from "@mantine/hooks";
 import { GET_PRODUCTS, GET_CATEGORIES, GET_BRANDS } from "@graphql/queries";
 import { useLazyQuery, useMutation, useQuery } from "@apollo/client";
@@ -27,13 +27,13 @@ function Products() {
       description: "",
       category: "",
       brand: "",
-      attributes: formList([
+      attributes: [
         {
           name: "",
           description: "",
-          attributeOptions: formList([{ name: "" }]),
+          attributeOptions: [{ name: "" }],
         },
-      ]),
+      ],
     },
   });
 
@@ -44,19 +44,19 @@ function Products() {
           placeholder="John Doe"
           required
           sx={{ flex: 1 }}
-          {...form.getListInputProps("attributes", index, "name")}
+          {...form.getInputProps(`attributes.${index}.name`)}
         />
         <TextInput
           placeholder="Short description"
           sx={{ flex: 2 }}
-          {...form.getListInputProps("attributes", index, "description")}
+          {...form.getInputProps(`attributes.${index}.description`)}
         />
       </Group>
       <Group mt="sm">
         <Button
           sx={{ flex: 1 }}
           onClick={() =>
-            form.addListItem(`attributes.${index}.attributeOptions`, {
+            form.insertListItem(`attributes.${index}.attributeOptions`, {
               name: "",
             })
           }
@@ -69,7 +69,7 @@ function Products() {
             key={uuid()}
             placeholder="Short description"
             style={{ width: "100%" }}
-            {...form.getListInputProps("attributeOptions", i, "name")}
+            {...form.getInputProps(`attributes.${index}.name.attributeOptions.${i}.name`)}
           />
         ))}
       </Group>
@@ -216,7 +216,7 @@ function Products() {
           <Button
             mt={10}
             onClick={() =>
-              form.addListItem("attributes", {
+              form.insertListItem("attributes", {
                 name: "",
                 description: "",
                 attributeOptions: [],
