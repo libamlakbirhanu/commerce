@@ -5,12 +5,13 @@ import HeaderNav from "./Header";
 
 function Layout({ children }) {
   let location = useLocation();
-  console.log(location);
+  const exclude = ["/role-choice", "/unauthorized", "/login", "/register"];
+
   return (
     <>
-      {location.pathname !== "/role-choice" && <HeaderNav />}
+      {!exclude.includes(location.pathname) && <HeaderNav />}
       {children}
-      {location.pathname !== "/role-choice" && <Footer />}
+      {!exclude.includes(location.pathname) && <Footer />}
     </>
   );
 }

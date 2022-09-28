@@ -21,12 +21,15 @@ const useStyles = createStyles((theme) => ({
     display: "flex",
     alignItems: "center",
     justifyContent: "space-around",
+    position: 'absolute',
+    inset: 0,
   },
 
   form: {
     // borderRight: `1px solid ${
     //   theme.colorScheme === "dark" ? theme.colors.dark[7] : theme.colors.gray[3]
     // }`,
+    width: "50%",
     backgroundColor: "transparent",
     maxWidth: 450,
     paddingTop: 80,
@@ -96,7 +99,12 @@ const Register = () => {
 
   return (
     <div className={classes.wrapper}>
-      <Image radius="md" src={loginGif} alt="Random unsplash image" />
+      <Image
+        radius="md"
+        src={loginGif}
+        alt="Random unsplash image"
+        style={{ width: "40%" }}
+      />
       <Paper className={classes.form} radius={0} p={30}>
         <form onSubmit={form.onSubmit((values) => handleSubmit(values))}>
           <Title

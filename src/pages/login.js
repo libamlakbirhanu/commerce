@@ -25,12 +25,15 @@ const useStyles = createStyles((theme) => ({
     display: "flex",
     alignItems: "center",
     justifyContent: "space-around",
+    position: 'absolute',
+    inset: 0,
   },
 
   form: {
     // borderRight: `1px solid ${
     //   theme.colorScheme === "dark" ? theme.colors.dark[7] : theme.colors.gray[3]
     // }`,
+    width: "50%",
     backgroundColor: "transparent",
     maxWidth: 450,
     paddingTop: 80,
@@ -98,7 +101,7 @@ const Login = () => {
 
         isLoggedInVar(true);
         user(res.data.login.user);
-        
+
         dispatch(authLogin(res.data.login.user));
         navigate("/", { replace: true });
       }
@@ -110,7 +113,6 @@ const Login = () => {
     }
   }, []);
 
-  console.log("rendered");
   return (
     <div className={classes.wrapper}>
       <Paper className={classes.form} radius={0} p={30}>
@@ -153,7 +155,12 @@ const Login = () => {
           </Link>
         </form>
       </Paper>
-      <Image radius="md" src={loginGif} alt="Random unsplash image" />
+      <Image
+        radius="md"
+        src={loginGif}
+        alt="Random unsplash image"
+        style={{ width: "40%" }}
+      />
     </div>
   );
 };
