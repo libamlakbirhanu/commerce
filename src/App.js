@@ -1,4 +1,4 @@
-import { Container } from "@mantine/core";
+import { Container, LoadingOverlay } from "@mantine/core";
 import React, { useEffect } from "react";
 import { Routes, Route, Link, Navigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
@@ -15,6 +15,7 @@ import Products from "./pages/products";
 import Unauthorized from "./pages/unauthorized";
 import CAN from "@ability/can";
 import { authLogin, switchFirstEntrance } from "@redux/authSlice";
+import ProductVariant from "./pages/ProductVariant";
 
 function App() {
   const auth = useSelector((state) => state.auth);
@@ -25,7 +26,9 @@ function App() {
     dispatch(switchFirstEntrance());
   }, []);
 
-  return auth.firstEntrance ? null : (
+  return auth.firstEntrance ? (
+    <LoadingOverlay visible={auth.firstEntrance} overlayBlur={2} />
+  ) : (
     <Layout>
       <Container size="xl">
         <Routes>
@@ -49,6 +52,18 @@ function App() {
                 <Navigate replace to="/unauthorized" />
               ) : (
                 <Products />
+              )
+            }
+          />
+          <Route
+            path="product-variants"
+            element={
+              !auth.user ? (
+                <Navigate replace to="/login" />
+              ) : !CAN("read", "store") ? (
+                <Navigate replace to="/unauthorized" />
+              ) : (
+                <ProductVariant />
               )
             }
           />
