@@ -8,6 +8,9 @@ import {
   Select,
   Text,
   Paper,
+  Table,
+  Pagination,
+  LoadingOverlay,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { useNetwork } from "@mantine/hooks";
@@ -17,6 +20,7 @@ import { CREATE_PRODUCT } from "@graphql/mutations";
 import uuid from "react-uuid";
 
 function Products() {
+  const [activePage, setPage] = useState(1);
   const [opened, setOpened] = useState(false);
 
   const networkStatus = useNetwork();
@@ -99,7 +103,7 @@ function Products() {
   const { data, loading } = useQuery(GET_PRODUCTS, {
     variables: {
       first: 10,
-      page: 1,
+      page: activePage,
     },
   });
 
@@ -124,25 +128,32 @@ function Products() {
   //   });
   // };
 
-  const addProduct = (values) => {
-    createProduct({
-      variables: {
-        category_id: values.category,
-        store_id: "07fd3e0d-3a2b-4bb7-9048-141c6e4eb12d",
-        attributes: [...values.attributes],
-        brand_id: values.brand,
-        sku: uuid(),
-        name: values.name,
-        description: values.description,
-      },
-    });
+  const addProduct = async (values) => {
+    try {
+      await createProduct({
+        variables: {
+          category_id: values.category,
+          store_id: "ff155ed1-fbe0-4682-b6bd-678e721fc6fc",
+          attributes: [...values.attributes],
+          brand_id: values.brand,
+          sku: uuid(),
+          name: values.name,
+          description: values.description,
+        },
+      });
+
+      setOpened(false);
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   if (!networkStatus.online)
     return <p>Oops... you're device appears to be offline</p>;
-  if (loading) return <p>loading...</p>;
 
-  return (
+  return loading ? (
+    <LoadingOverlay visible={loading} overlayBlur={2} />
+  ) : (
     <>
       <Modal
         opened={opened}
@@ -219,7 +230,7 @@ function Products() {
               form.insertListItem("attributes", {
                 name: "",
                 description: "",
-                attributeOptions: [],
+                attributeOptions: { create: [] },
               })
             }
           >
@@ -232,13 +243,14 @@ function Products() {
           </Group>
         </form>
       </Modal>
+
       <div style={{ display: "flex", justifyContent: "space-between" }}>
         <p>{data.products.data.length} Products</p>
         <button style={{ cursor: "pointer" }} onClick={() => setOpened(true)}>
           ADD PRODUCT +
         </button>
       </div>
-      {!data.products.data.length && (
+      {!data.products.data.length ? (
         <div style={{ width: "80%", marginInline: "auto" }}>
           <Card
             mt={50}
@@ -256,6 +268,49 @@ function Products() {
             </p>
           </Card>
         </div>
+      ) : (
+        <Table
+          striped
+          highlightOnHover
+          verticalSpacing="md"
+          captionSide="bottom"
+        >
+          <caption>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "flex-end",
+                alignItems: "center",
+                gap: "2rem",
+              }}
+            >
+              {activePage} of {data.products.paginatorInfo.lastPage} pages{" "}
+              <Pagination
+                page={activePage}
+                onChange={setPage}
+                total={data.products.paginatorInfo.lastPage}
+              />
+            </div>
+          </caption>
+          <thead>
+            <tr>
+              <th>id</th>
+              <th>Name</th>
+              <th>Description</th>
+              <th>SKU</th>
+            </tr>
+          </thead>
+          <tbody>
+            {data.products.data.map((product, i) => (
+              <tr key={product.id}>
+                <td>{i + 1}</td>
+                <td>{product.name}</td>
+                <td>{product.description || "no description"}</td>
+                <td>{product.sku}</td>
+              </tr>
+            ))}
+          </tbody>
+        </Table>
       )}
     </>
   );
