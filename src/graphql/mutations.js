@@ -62,6 +62,17 @@ export const CREATE_PRODUCT = gql`
   }
 `;
 
+export const CREATE_PRODUCT_VARIANT = gql`
+  mutation CreateVariant($input: ProductVariantInput!) {
+    createProductVariant(input: $input) {
+      id
+      sku
+      price
+      description
+    }
+  }
+`;
+
 export const ADD_CAR = gql`
   mutation AddCar($carInput: CarData!) {
     addCar(carInput: $carInput) {

@@ -28,7 +28,7 @@ import { IconSettings, IconList } from "@tabler/icons";
 import Card2 from "../components/Card2";
 import Card1 from "../components/Card1";
 import { useLazyQuery, useQuery } from "@apollo/client";
-import { GET_PRODUCTS } from "../graphql/queries";
+import { GET_PRODUCTS, GET_PRODUCT_VARIANTS } from "../graphql/queries";
 
 const useStyles = createStyles((theme) => ({
   categories: {
@@ -142,15 +142,13 @@ function Index() {
   const [page, setPage] = useState(0);
   let navigate = useNavigate();
   const { classes } = useStyles();
-  const [getProducts, { loading, error, data, fetchMore }] = useLazyQuery(
-    GET_PRODUCTS,
-    {
-      variables: { first: 5, page: page },
-    }
-  );
+  const [getProductVariants, { loading, error, data, fetchMore }] =
+    useLazyQuery(GET_PRODUCT_VARIANTS, {
+      variables: { first: 20, page: page },
+    });
 
   useEffect(() => {
-    getProducts();
+    getProductVariants();
   }, []);
 
   const categories = [
@@ -422,19 +420,19 @@ function Index() {
               { maxWidth: "xs", cols: 1, spacing: "sm" },
             ]}
           >
-            {data.products.data.map((product, i) => (
+            {data.productVariants.data.map((product, i) => (
               <Card1 product={product} key={product.id} />
             ))}
           </SimpleGrid>
 
           <div style={{ marginTop: "2rem" }}></div>
 
-          {!data.products.data.length ? (
+          {!data.productVariants.data.length ? (
             <InView
               onChange={async (inView) => {
                 if (inView) {
-                  getProducts({
-                    variables: { first: 5, page },
+                  getProductVariants({
+                    variables: { first: 20, page: page + 1 },
                   });
                 }
               }}

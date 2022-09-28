@@ -66,7 +66,7 @@ function Card1({product}) {
       <Image src={product.image} width={170} className={classes.image} mb={10} />
       <div style={{ display: "flex", flexDirection: "column", gap: "0.1rem" }}>
         <Text className={classes.largeText} size="lg" color="gray" weight={600}>
-          {product.name}
+          {product.product.name}
         </Text>
         <Text className={classes.largeText} size="md" color="#A8803A">
           {product.description}
@@ -78,7 +78,7 @@ function Card1({product}) {
           -40 %
         </Text>
         <Text className={classes.largeText} size="md" color="gray" weight={500}>
-          {product.sellAmount} sold
+          40 sold
         </Text>
       </div>
     </div>
