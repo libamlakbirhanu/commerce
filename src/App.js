@@ -16,14 +16,28 @@ import Unauthorized from "./pages/unauthorized";
 import CAN from "@ability/can";
 import { authLogin, switchFirstEntrance } from "@redux/authSlice";
 import ProductVariant from "./pages/ProductVariant";
+import { useLazyQuery } from "@apollo/client";
+import { GET_USER } from "./graphql/queries";
 
 function App() {
   const auth = useSelector((state) => state.auth);
   const dispatch = useDispatch();
+  const [me] = useLazyQuery(GET_USER);
+
+  const fetchUser = async () => {
+    const res = await me();
+
+    dispatch(switchFirstEntrance());
+    res.data.me &&
+      dispatch(
+        authLogin({
+          ...res.data.me,
+        })
+      );
+  };
 
   useEffect(() => {
-    dispatch(authLogin({ name: "libe" }));
-    dispatch(switchFirstEntrance());
+    fetchUser();
   }, []);
 
   return auth.firstEntrance ? (
@@ -33,7 +47,20 @@ function App() {
       <Container size="xl">
         <Routes>
           <Route path="/" element={<Index />} />
-          <Route path="role-choice" element={<UserRoleChoice />} />
+          <Route
+            path="role-choice"
+            element={
+              !auth.user ? (
+                <Navigate replace to="/login" />
+              ) : !auth.user.roles.length ? (
+                <UserRoleChoice />
+              ) : auth.user.roles[0].name === "vendor" ? (
+                <Navigate replace to="/store" />
+              ) : (
+                <Navigate replace to="/" />
+              ) 
+            }
+          />
           <Route path="store" element={<Store />} />
           <Route
             path="home"

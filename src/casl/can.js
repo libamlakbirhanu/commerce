@@ -9,27 +9,23 @@ const checkAbility = (action, subject) => {
 
 store.subscribe(() => {
   let auth = store.getState().auth;
-  auth?.user && ability.update(defineRulesFor(auth?.user.role));
+
+  auth?.user?.roles &&
+    ability.update(defineRulesFor(auth?.user?.roles[0]?.name));
 });
 
 const defineRulesFor = (role) => {
   const { can, rules } = new AbilityBuilder();
 
   switch (role) {
-    case "admin":
+    case "customer":
       can("manage", "all");
       break;
-    case "manager":
-      can("manage", "PurchaseOrder");
-      can("manage", "Report");
-      can("read", "Product");
-      can("read", "Inventory");
-      break;
-    case "store-owner":
+    case "vendor":
       can("manage", "store");
       break;
     default:
-      can("read", "all");
+      break;
   }
 
   return rules;

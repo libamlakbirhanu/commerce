@@ -24,7 +24,20 @@ export const LOGIN = gql`
       user {
         id
         email
+        roles {
+          id
+          name
+        }
       }
+    }
+  }
+`;
+
+export const ASSIGN_ROLE = gql`
+  mutation AssignRole($input: AssignRoleInput!) {
+    assignRole(input: $input) {
+      id
+      name
     }
   }
 `;
@@ -69,6 +82,21 @@ export const CREATE_PRODUCT_VARIANT = gql`
       sku
       price
       description
+    }
+  }
+`;
+
+// input: {
+//   unit_price: 100,
+//   quantity: 5,
+//   productVariant: {connect: ""}
+//   user: {connect: ""}
+// }
+export const CREATE_CART_ITEM = gql`
+  mutation CreateCartItem($input: CartItemInput!) {
+    createCartItem(input: $input) {
+      id
+      unit_price
     }
   }
 `;

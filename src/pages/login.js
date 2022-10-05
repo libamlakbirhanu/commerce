@@ -25,7 +25,7 @@ const useStyles = createStyles((theme) => ({
     display: "flex",
     alignItems: "center",
     justifyContent: "space-around",
-    position: 'absolute',
+    position: "absolute",
     inset: 0,
   },
 
@@ -97,13 +97,15 @@ const Login = () => {
 
       if (res.data.login) {
         localStorage.setItem("token", res.data.login.access_token);
-        localStorage.setItem("userId", res.data.login.user.id);
 
         isLoggedInVar(true);
         user(res.data.login.user);
 
         dispatch(authLogin(res.data.login.user));
-        navigate("/", { replace: true });
+
+        !res.data.login.user.roles.length
+          ? navigate("/role-choice", { replace: true })
+          : navigate("/", { replace: true });
       }
     } catch (err) {
       console.log(err);

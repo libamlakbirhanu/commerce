@@ -12,7 +12,7 @@ import {
   Anchor,
   Image,
 } from "@mantine/core";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import loginGif from "../assets/login-bg0.gif";
 import { REGISTER } from "../graphql/mutations";
 
@@ -21,7 +21,7 @@ const useStyles = createStyles((theme) => ({
     display: "flex",
     alignItems: "center",
     justifyContent: "space-around",
-    position: 'absolute',
+    position: "absolute",
     inset: 0,
   },
 
@@ -66,6 +66,7 @@ const schema = Yup.object().shape({
 });
 
 const Register = () => {
+  const navigate = useNavigate();
   const [register, { data, loading, error }] = useMutation(REGISTER);
   const { classes } = useStyles();
 
@@ -81,9 +82,9 @@ const Register = () => {
   // if (loading) return "Submitting...";
   if (error) return `Submission error! ${error.message}`;
 
-  const handleSubmit = (values) => {
+  const handleSubmit = async (values) => {
     try {
-      register({
+      await register({
         variables: {
           input: {
             email: values.email,
@@ -92,6 +93,8 @@ const Register = () => {
           },
         },
       });
+
+      navigate("/login", { replace: true });
     } catch (err) {
       console.log(err);
     }

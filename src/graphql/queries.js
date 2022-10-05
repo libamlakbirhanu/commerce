@@ -1,5 +1,27 @@
 import { gql } from "@apollo/client";
 
+export const GET_ROLES = gql`
+  query Roles {
+    roles {
+      id
+      name
+    }
+  }
+`;
+
+export const GET_USER = gql`
+  query Me {
+    me {
+      id
+      email
+      roles {
+        id
+        name
+      }
+    }
+  }
+`;
+
 export const GET_CHARACTERS = gql`
   query Characters($page: Int) {
     characters(page: $page, filter: { name: "rick" }) {
@@ -159,6 +181,17 @@ export const GET_PRODUCT_ATTRIBUTES = gql`
           name
           description
         }
+      }
+    }
+  }
+`;
+
+export const GET_CART_ITEMS = gql`
+  query GetCartItems($first: Int!) {
+    cartItems(first: $first) {
+      data {
+        unit_price
+        id
       }
     }
   }

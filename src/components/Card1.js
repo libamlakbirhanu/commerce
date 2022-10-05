@@ -54,7 +54,7 @@ const useStyles = createStyles((theme) => ({
   },
 }));
 
-function Card1({product}) {
+function Card1({ product }) {
   let navigate = useNavigate();
   const { classes } = useStyles();
 
@@ -63,7 +63,7 @@ function Card1({product}) {
       className={classes.wrapper}
       onClick={() => navigate("/detail", { replace: true })}
     >
-      <Image src={product.image} width={170} className={classes.image} mb={10} />
+      <Image src={shoes} width={170} className={classes.image} mb={10} />
       <div style={{ display: "flex", flexDirection: "column", gap: "0.1rem" }}>
         <Text className={classes.largeText} size="lg" color="gray" weight={600}>
           {product.product.name}

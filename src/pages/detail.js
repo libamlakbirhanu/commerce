@@ -1,9 +1,28 @@
-import { createStyles, Grid, Image, Text } from "@mantine/core";
-import React from "react";
+import {
+  createStyles,
+  Grid,
+  Image,
+  Text,
+  Card,
+  Badge,
+  Button,
+  NumberInput,
+  Group,
+  ActionIcon,
+  NumberInputHandlers,
+} from "@mantine/core";
+import { useState, useRef } from "react";
 import { SideBySideMagnifier } from "react-image-magnifiers";
-import { IconChevronDown, IconStar } from "@tabler/icons";
-// import bikini from "../assets/bikini.png";
+import {
+  IconCaretDown,
+  IconChevronDown,
+  IconShoppingCart,
+  IconStar,
+} from "@tabler/icons";
+import bikini from "../assets/bikini.png";
 import dog from "../assets/dog.jpg";
+import { CREATE_CART_ITEM } from "../graphql/mutations";
+import { useMutation } from "@apollo/client";
 
 const useStyles = createStyles((theme) => ({
   magnifier: {
@@ -19,7 +38,15 @@ const useStyles = createStyles((theme) => ({
 }));
 
 function Detail() {
+  const [value, setValue] = useState(1);
+  const handlers = useRef();
   const { classes } = useStyles();
+
+  const [createCartItem] = useMutation(CREATE_CART_ITEM);
+
+  const handleSubmit = (values) => {
+    console.log(values)
+  }
 
   return (
     <Grid gutter="md">
@@ -130,9 +157,80 @@ function Detail() {
             className={classes.smallImage}
             mb={10}
           />
+          <Group spacing={5}>
+            <ActionIcon
+              size={32}
+              radius="xl"
+              variant="default"
+              onClick={() => handlers.current.decrement()}
+            >
+              –
+            </ActionIcon>
+
+            <NumberInput
+              hideControls
+              value={value}
+              onChange={(val) => setValue(val)}
+              handlersRef={handlers}
+              max={10}
+              min={1}
+              step={2}
+              styles={{ input: { width: 54, textAlign: "center" } }}
+            />
+
+            <ActionIcon
+              size={32}
+              radius="xl"
+              variant="default"
+              onClick={() => handlers.current.increment()}
+            >
+              +
+            </ActionIcon>
+            <Text size="xs" color="gray">
+              quantity
+            </Text>
+          </Group>
+          <Button mt="xl" leftIcon={<IconShoppingCart />}>
+            Add to cart
+          </Button>
         </div>
       </Grid.Col>
-      <Grid.Col span={2}>3</Grid.Col>
+      <Grid.Col span={2}>
+        <Text align="center" weight={700} mb="lg">
+          Recommended
+        </Text>
+        <Card
+          p="lg"
+          radius="md"
+          mx="md"
+          mb="md"
+          withBorder
+          style={{ background: "none" }}
+        >
+          <Card.Section m="sm">
+            <Image src={bikini} height={160} alt="Norway" />
+          </Card.Section>
+
+          <Button variant="light" color="blue" fullWidth mt="md" radius="md">
+            Bikini
+          </Button>
+        </Card>
+        <Card
+          p="lg"
+          radius="md"
+          mx="md"
+          withBorder
+          style={{ background: "none" }}
+        >
+          <Card.Section m="sm">
+            <Image src={bikini} height={160} alt="Norway" />
+          </Card.Section>
+
+          <Button variant="light" color="blue" fullWidth mt="md" radius="md">
+            wahman
+          </Button>
+        </Card>
+      </Grid.Col>
     </Grid>
   );
 }

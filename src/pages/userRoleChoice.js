@@ -1,6 +1,11 @@
 // import { MessageCircle, EyeCheck } from "@tabler/icons";
+import { useMutation, useQuery } from "@apollo/client";
 import { Card, Text, Group, createStyles, SimpleGrid } from "@mantine/core";
+import { useDispatch, useSelector } from "react-redux";
 import logo from "../assets/logo192.png";
+import { ASSIGN_ROLE } from "../graphql/mutations";
+import { GET_ROLES } from "../graphql/queries";
+import { addRole } from "../redux/authSlice";
 
 const useStyles = createStyles((theme, _params, getRef) => {
   const image = getRef("image");
@@ -92,6 +97,14 @@ const useStyles = createStyles((theme, _params, getRef) => {
 });
 
 const UserRoleChoice = () => {
+  const dispatch = useDispatch();
+  const auth = useSelector((state) => state.auth);
+  const [assignRole] = useMutation(ASSIGN_ROLE);
+  const {
+    data: rolesData,
+    loading: rolesLoading,
+    error: rolesError,
+  } = useQuery(GET_ROLES);
   const data = [
     {
       image:
@@ -101,6 +114,7 @@ const UserRoleChoice = () => {
       author: "CREATE A STORE",
       views: 7847,
       comments: 5,
+      role: "vendor",
     },
     {
       image:
@@ -110,9 +124,25 @@ const UserRoleChoice = () => {
       author: "GO TO HOMEPAGE",
       views: 7847,
       comments: 5,
+      role: "customer",
     },
   ];
   const { classes, theme } = useStyles();
+
+  const assignRoles = async (value) => {
+    const role = rolesData.roles.filter((role) => role.name === value);
+
+    const res = await assignRole({
+      variables: {
+        input: {
+          role: { connect: role[0].id },
+          user: { connect: auth.user.id },
+        },
+      },
+    });
+
+    dispatch(addRole(res.data.assignRole.name));
+  };
 
   return (
     <>
@@ -124,8 +154,9 @@ const UserRoleChoice = () => {
             shadow="lg"
             className={classes.card}
             radius="md"
-            component="a"
-            href={item.link}
+            // component="a"
+            // href={item.link}
+            onClick={() => assignRoles(item.role)}
             // target="_blank"
           >
             <div

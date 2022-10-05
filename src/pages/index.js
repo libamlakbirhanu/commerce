@@ -29,6 +29,7 @@ import Card2 from "../components/Card2";
 import Card1 from "../components/Card1";
 import { useLazyQuery, useQuery } from "@apollo/client";
 import { GET_PRODUCTS, GET_PRODUCT_VARIANTS } from "../graphql/queries";
+import { useSelector } from "react-redux";
 
 const useStyles = createStyles((theme) => ({
   categories: {
@@ -141,12 +142,13 @@ const useStyles = createStyles((theme) => ({
 function Index() {
   const [page, setPage] = useState(0);
   let navigate = useNavigate();
+  const auth = useSelector((state) => state.auth);
   const { classes } = useStyles();
   const [getProductVariants, { loading, error, data, fetchMore }] =
     useLazyQuery(GET_PRODUCT_VARIANTS, {
       variables: { first: 20, page: page },
     });
-
+  // console.log(auth);
   useEffect(() => {
     getProductVariants();
   }, []);

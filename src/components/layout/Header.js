@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   createStyles,
   Header,
@@ -24,7 +24,9 @@ import {
   IconArrowsLeftRight,
 } from "@tabler/icons";
 import logo from "../../assets/logo192.png";
+import { GET_PRODUCTS, GET_CART_ITEMS } from "../../graphql/queries";
 import { useNavigate } from "react-router-dom";
+import { useQuery } from "@apollo/client";
 
 const useStyles = createStyles((theme) => ({
   header: {
@@ -74,33 +76,41 @@ const useStyles = createStyles((theme) => ({
   },
 }));
 
-const data = {
-  links: [
-    {
-      link: "/about",
-      label: "Features",
-    },
-    {
-      link: "/pricing",
-      label: "Pricing",
-    },
-    {
-      link: "/learn",
-      label: "Learn",
-    },
-    {
-      link: "/community",
-      label: "Community",
-    },
-  ],
-};
+const links = [
+  {
+    link: "/about",
+    label: "Features",
+  },
+  {
+    link: "/pricing",
+    label: "Pricing",
+  },
+  {
+    link: "/learn",
+    label: "Learn",
+  },
+  {
+    link: "/community",
+    label: "Community",
+  },
+];
 
 const HeaderNav = () => {
   let navigate = useNavigate();
+  const [search, setSearch] = useState("");
+  const { data, loading, error } = useQuery(GET_PRODUCTS, {
+    variables: {
+      first: 10,
+      search,
+    },
+  });
+  const { data: cartData, loading: cartLoading, error: cartError } = useQuery(GET_CART_ITEMS, {
+    variables: {
+      first: 10,
+    },
+  });
   const [opened, toggleOpened] = useToggle([false, true]);
   const { classes } = useStyles();
-
-  const { links } = data;
 
   const items = links.map((link) => (
     <a
@@ -139,22 +149,26 @@ const HeaderNav = () => {
             className={classes.search}
             placeholder="Search"
             icon={<IconSearch size={16} />}
-            data={[
-              "React",
-              "Angular",
-              "Vue",
-              "Next.js",
-              "Riot.js",
-              "Svelte",
-              "Blitz.js",
-            ]}
+            onChange={(val) => {
+              setSearch(val);
+            }}
+            data={
+              data
+                ? data.products.data.map((item) => {
+                    return {
+                      // name: item.name,
+                      value: item.name,
+                    };
+                  })
+                : []
+            }
           />
           <div style={{ marginLeft: 50 }}>
             <Menu width={200} position="bottom-end">
               <Menu.Target>
                 <Indicator
                   inline
-                  label="3"
+                  label={cartData ? cartData.cartItems.data.length : 0}
                   size={16}
                   color="red"
                   style={{ cursor: "pointer" }}
