@@ -42,6 +42,16 @@ export const ASSIGN_ROLE = gql`
   }
 `;
 
+export const CREATE_STORE = gql`
+  mutation CreateStore($input: StoreCreateInput!) {
+    createStore(input: $input) {
+      id
+      name
+      description
+    }
+  }
+`;
+
 export const CREATE_PRODUCT = gql`
   mutation CreateProduct(
     $category_id: String!
@@ -82,6 +92,11 @@ export const CREATE_PRODUCT_VARIANT = gql`
       sku
       price
       description
+      product {
+        id
+        name
+        description
+      }
     }
   }
 `;
@@ -97,6 +112,17 @@ export const CREATE_CART_ITEM = gql`
     createCartItem(input: $input) {
       id
       unit_price
+      quantity
+      productVariant {
+        id
+        price
+        description
+        images
+        product {
+          name
+          description
+        }
+      }
     }
   }
 `;

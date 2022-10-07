@@ -95,7 +95,7 @@ function App() {
             }
           />
           <Route
-            path="detail"
+            path="detail/:id"
             element={!auth.user ? <Navigate replace to="/login" /> : <Detail />}
           />
 

@@ -18,6 +18,11 @@ export const GET_USER = gql`
         id
         name
       }
+      store {
+        id
+        name
+        description
+      }
     }
   }
 `;
@@ -144,6 +149,31 @@ export const GET_PRODUCTS = gql`
   }
 `;
 
+export const GET_PRODUCT_VARIANT = gql`
+  query GetProductVariant($id: ID!) {
+    productVariant(id: $id) {
+      id
+      sku
+      price
+      description
+      images
+      product {
+        id
+        name
+        description
+        brand {
+          id
+          name
+        }
+        store {
+          id
+          name
+        }
+      }
+    }
+  }
+`;
+
 export const GET_PRODUCT_VARIANTS = gql`
   query GetProductVariants($first: Int!, $page: Int) {
     productVariants(first: $first, page: $page) {
@@ -156,6 +186,7 @@ export const GET_PRODUCT_VARIANTS = gql`
         sku
         price
         description
+        images
         product {
           id
           name
@@ -187,11 +218,40 @@ export const GET_PRODUCT_ATTRIBUTES = gql`
 `;
 
 export const GET_CART_ITEMS = gql`
-  query GetCartItems($first: Int!) {
-    cartItems(first: $first) {
-      data {
-        unit_price
+  query GetCartItems($product_variant_id: String) {
+    myCartItems(product_variant_id: $product_variant_id) {
+      unit_price
+      id
+      quantity
+      productVariant {
         id
+        price
+        description
+        images
+        product {
+          name
+          description
+        }
+      }
+    }
+  }
+`;
+
+export const GET_CART_ITEM = gql`
+  query GetCartItem($id: ID!) {
+    cartItem(id: $id) {
+      unit_price
+      id
+      quantity
+      productVariant {
+        id
+        price
+        description
+        images
+        product {
+          name
+          description
+        }
       }
     }
   }

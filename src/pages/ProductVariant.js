@@ -24,11 +24,12 @@ import {
 } from "../graphql/queries";
 import { CREATE_PRODUCT_VARIANT } from "../graphql/mutations";
 import DZoneComponent from "../components/DropZone";
+import uuid from "react-uuid";
 
 function ProductVariant() {
   const [activePage, setPage] = useState(1);
   const [productSearch, setProductSearch] = useState("");
-  const [opened, setOpened] = useState(true);
+  const [opened, setOpened] = useState(false);
   const [uploadfile, setuploadfiles] = useState([]);
 
   const form = useForm({
@@ -81,6 +82,7 @@ function ProductVariant() {
         variables: {
           input: {
             ...values,
+            sku: uuid(),
             images: [...uploadfile],
             productVariantAttributes: {
               create: [
@@ -239,7 +241,76 @@ function ProductVariant() {
           </Group>
         </form>
       </Modal>
-      <div>ProductVariant</div>
+
+      <div style={{ display: "flex", justifyContent: "space-between" }}>
+        <p>{data.productVariants.data.length} Product Variants</p>
+        <button style={{ cursor: "pointer" }} onClick={() => setOpened(true)}>
+          ADD PRODUCT VARIANT +
+        </button>
+      </div>
+      {!data.productVariants.data.length ? (
+        <div style={{ width: "80%", marginInline: "auto" }}>
+          <Card
+            mt={50}
+            shadow="sm"
+            p="lg"
+            radius="md"
+            withBorder
+            style={{ textAlign: "center" }}
+          >
+            <h1>There are currently no product variants in this store.</h1>
+            <br />
+            <p>
+              Click the "add product variant" button on the top right corner to
+              add a new product variant
+            </p>
+          </Card>
+        </div>
+      ) : (
+        <Table
+          striped
+          highlightOnHover
+          verticalSpacing="md"
+          captionSide="bottom"
+        >
+          <caption>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "flex-end",
+                alignItems: "center",
+                gap: "2rem",
+              }}
+            >
+              {activePage} of {data.productVariants.paginatorInfo.lastPage}{" "}
+              pages{" "}
+              <Pagination
+                page={activePage}
+                onChange={setPage}
+                total={data.productVariants.paginatorInfo.lastPage}
+              />
+            </div>
+          </caption>
+          <thead>
+            <tr>
+              <th>id</th>
+              <th>Name</th>
+              <th>Description</th>
+              <th>SKU</th>
+            </tr>
+          </thead>
+          <tbody>
+            {data.productVariants.data.map((variant, i) => (
+              <tr key={variant.id}>
+                <td>{i + 1}</td>
+                <td>{variant.product.name}</td>
+                <td>{variant.description || "no description"}</td>
+                <td>{variant.sku}</td>
+              </tr>
+            ))}
+          </tbody>
+        </Table>
+      )}
     </>
   );
 }

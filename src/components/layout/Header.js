@@ -12,6 +12,10 @@ import {
   Menu,
   Text,
   Divider,
+  Button,
+  Avatar,
+  ActionIcon,
+  NumberInput,
 } from "@mantine/core";
 import { useToggle } from "@mantine/hooks";
 import {
@@ -76,25 +80,6 @@ const useStyles = createStyles((theme) => ({
   },
 }));
 
-const links = [
-  {
-    link: "/about",
-    label: "Features",
-  },
-  {
-    link: "/pricing",
-    label: "Pricing",
-  },
-  {
-    link: "/learn",
-    label: "Learn",
-  },
-  {
-    link: "/community",
-    label: "Community",
-  },
-];
-
 const HeaderNav = () => {
   let navigate = useNavigate();
   const [search, setSearch] = useState("");
@@ -104,26 +89,15 @@ const HeaderNav = () => {
       search,
     },
   });
-  const { data: cartData, loading: cartLoading, error: cartError } = useQuery(GET_CART_ITEMS, {
-    variables: {
-      first: 10,
-    },
-  });
+  const {
+    data: cartData,
+    loading: cartLoading,
+    error: cartError,
+  } = useQuery(GET_CART_ITEMS);
   const [opened, toggleOpened] = useToggle([false, true]);
   const { classes } = useStyles();
 
-  const items = links.map((link) => (
-    <a
-      key={link.label}
-      href={link.link}
-      className={classes.link}
-      onClick={(event) => event.preventDefault()}
-    >
-      {link.label}
-    </a>
-  ));
-
-  return (
+  return cartData ? (
     <>
       <Drawer
         opened={opened}
@@ -164,11 +138,11 @@ const HeaderNav = () => {
             }
           />
           <div style={{ marginLeft: 50 }}>
-            <Menu width={200} position="bottom-end">
+            <Menu width={350} position="bottom-end">
               <Menu.Target>
                 <Indicator
                   inline
-                  label={cartData ? cartData.cartItems.data.length : 0}
+                  label={cartData ? cartData.myCartItems.length : 0}
                   size={16}
                   color="red"
                   style={{ cursor: "pointer" }}
@@ -176,40 +150,86 @@ const HeaderNav = () => {
                   <IconShoppingCart size={30} />
                 </Indicator>
               </Menu.Target>
-              <Menu.Dropdown>
+              <Menu.Dropdown height={50}>
                 {/* <Menu.Label>Application</Menu.Label> */}
-                <Menu.Item icon={<IconSettings size={14} />}>
-                  Settings
-                </Menu.Item>
-                <Menu.Item icon={<IconMessageCircle size={14} />}>
-                  Messages
-                </Menu.Item>
-                <Menu.Item icon={<IconPhoto size={14} />}>Gallery</Menu.Item>
-                <Menu.Item
-                  icon={<IconSearch size={14} />}
-                  rightSection={
-                    <Text size="xs" color="dimmed">
-                      ⌘K
-                    </Text>
-                  }
+                {cartData.myCartItems.map((cart) => (
+                  <Menu.Item
+                    icon={
+                      <Avatar
+                        src={cart.productVariant.images[0]}
+                        alt="it's me"
+                      />
+                    }
+                  >
+                    <div
+                      style={{
+                        display: "flex",
+                        gap: "1rem",
+                        justifyContent: "space-between",
+                        alignItems: "center",
+                      }}
+                    >
+                      <Text weight={700}>
+                        {cart.productVariant.description}
+                      </Text>
+                      <Group >
+                        <div
+                          style={{
+                            marginLeft: "auto",
+                            display: "flex",
+                            alignItems: "center",
+                            gap: "5px",
+                          }}
+                        >
+                          <ActionIcon
+                            disabled={cart.quantity <= 1}
+                            size={32}
+                            radius="xl"
+                            variant="default"
+                            // onClick={() => setValue(value - 1)}
+                          >
+                            –
+                          </ActionIcon>
+
+                          <NumberInput
+                            hideControls
+                            value={cart.quantity}
+                            // onChange={(val) => setValue(val)}
+                            max={10}
+                            min={1}
+                            step={2}
+                            styles={{
+                              input: { width: 54, textAlign: "center" },
+                            }}
+                          />
+
+                          <ActionIcon
+                            disabled={cart.quantity >= 10}
+                            size={32}
+                            radius="xl"
+                            variant="default"
+                            // onClick={() => setValue(value + 1)}
+                          >
+                            +
+                          </ActionIcon>
+                        </div>
+                      </Group>
+                    </div>
+                  </Menu.Item>
+                ))}
+                <Button
+                  leftIcon={<IconShoppingCart size={14} />}
+                  style={{ width: "100%" }}
                 >
-                  Search
-                </Menu.Item>
-                <Divider />
-                <Menu.Label>Danger zone</Menu.Label>
-                <Menu.Item icon={<IconArrowsLeftRight size={14} />}>
-                  Transfer my data
-                </Menu.Item>
-                <Menu.Item color="red" icon={<IconTrash size={14} />}>
-                  Delete my account
-                </Menu.Item>
+                  Check out
+                </Button>
               </Menu.Dropdown>
             </Menu>
           </div>
         </Container>
       </Header>
     </>
-  );
+  ) : null;
 };
 
 export default HeaderNav;

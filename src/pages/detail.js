@@ -10,8 +10,10 @@ import {
   Group,
   ActionIcon,
   NumberInputHandlers,
+  LoadingOverlay,
 } from "@mantine/core";
 import { useState, useRef } from "react";
+import { useSelector } from "react-redux";
 import { SideBySideMagnifier } from "react-image-magnifiers";
 import {
   IconCaretDown,
@@ -22,7 +24,9 @@ import {
 import bikini from "../assets/bikini.png";
 import dog from "../assets/dog.jpg";
 import { CREATE_CART_ITEM } from "../graphql/mutations";
-import { useMutation } from "@apollo/client";
+import { useMutation, useQuery } from "@apollo/client";
+import { useParams } from "react-router-dom";
+import { GET_PRODUCT_VARIANT, GET_CART_ITEMS } from "../graphql/queries";
 
 const useStyles = createStyles((theme) => ({
   magnifier: {
@@ -38,22 +42,82 @@ const useStyles = createStyles((theme) => ({
 }));
 
 function Detail() {
+  const auth = useSelector((state) => state.auth);
+  const { id } = useParams();
   const [value, setValue] = useState(1);
-  const handlers = useRef();
   const { classes } = useStyles();
 
-  const [createCartItem] = useMutation(CREATE_CART_ITEM);
+  const [createCartItem, { loading: cartLoading, error: cartError }] =
+    useMutation(CREATE_CART_ITEM);
+  const { data, loading, error } = useQuery(GET_PRODUCT_VARIANT, {
+    variables: {
+      id,
+    },
+  });
+  const { data: myCartData, loading: myCartLoading } = useQuery(
+    GET_CART_ITEMS,
+    {
+      variables: {
+        product_variant_id: id,
+      },
+    }
+  );
 
-  const handleSubmit = (values) => {
-    console.log(values)
-  }
+  const handleSubmit = async () => {
+    try {
+      await createCartItem({
+        variables: {
+          input: {
+            unit_price: data.productVariant.price,
+            quantity: value,
+            user: {
+              connect: auth.user.id,
+            },
+            productVariant: {
+              connect: data.productVariant.id,
+            },
+          },
+        },
+        update(cache, { data: { createCartItem } }) {
+          cache.updateQuery(
+            {
+              query: GET_CART_ITEMS,
+            },
+            ({ myCartItems }) => {
+              return {
+                myCartItems: [...myCartItems.concat([createCartItem])],
+              };
+            }
+          );
 
-  return (
+          const { myCartItems } = cache.readQuery({
+            query: GET_CART_ITEMS,
+            variables: {
+              product_variant_id: id,
+            },
+          });
+          cache.writeQuery({
+            query: GET_CART_ITEMS,
+            variables: {
+              product_variant_id: id,
+            },
+            data: { myCartItems: [...myCartItems.concat([createCartItem])] },
+          });
+        },
+      });
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  return loading ? (
+    <LoadingOverlay visible={loading} overlayBlur={2} />
+  ) : (
     <Grid gutter="md">
       <Grid.Col span={4}>
         <SideBySideMagnifier
           className={classes.magnifier}
-          imageSrc={dog}
+          imageSrc={data.productVariant.images[0]}
           imageAlt="Product image"
           alwaysInPlace={false}
           fillAvailableSpace={true}
@@ -65,11 +129,10 @@ function Detail() {
         <div
           style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}
         >
-          <Text color="gray">
-            Einfache Schwarz Onyx Choker mit Baphomet Anhänger Vintage
-            Pentagramm Schädel Runde Ziege Kopf Halskette Teufel Pan Gott
-            Halsketten
+          <Text weight={700}>
+            VENDOR - {data.productVariant.product?.store?.name}
           </Text>
+          <Text weight={700}>{data.productVariant.product?.brand?.name}</Text>
           <div style={{ display: "flex", gap: "1rem" }}>
             <div style={{ display: "flex", alignItems: "center" }}>
               <IconStar fill="orange" size={18} color="orange" />
@@ -81,27 +144,20 @@ function Detail() {
             <div style={{ display: "flex", alignItems: "center" }}>
               4.7
               <IconChevronDown size={12} />
-              <Text ml={10} color="gray">
-                73 Bewertungen
-              </Text>
-              <Text ml={10} color="gray">
-                292 Bestellungen
-              </Text>
             </div>
           </div>
-          <Text color="red" ml={30}>
-            ETB 156.01 Rabatt pro ausgegebene ETB 1,560.13
-          </Text>
           <hr
             style={{
-              width: "100%",
+              width: "50%",
               border: "0.2px solid rgba(0,0,0,0.1)",
-              margin: "auto",
+              // margin: "auto",
               marginTop: "0.3rem",
               marginBottom: "1rem",
             }}
           />
-
+          <Text weight={500} size="sm">
+            {data.productVariant.description}
+          </Text>
           <div
             style={{
               display: "flex",
@@ -111,10 +167,13 @@ function Detail() {
             }}
           >
             <Text weight={700} size="xl">
-              ETB 114.93
+              {data.productVariant.price.toLocaleString("hi-IN", {
+                style: "currency",
+                currency: "ETB",
+              })}
             </Text>
             <Text weight={500} size="md" color="gray">
-              <s>ETB 191.38</s>
+              <s>ETB 5,800.00</s>
             </Text>
             <Text
               size="xs"
@@ -128,30 +187,25 @@ function Detail() {
               -40%
             </Text>
           </div>
-          <Text size="xs">
-            Verkäuferrabatt: ETB 208.02 Rabatt für Bestellungen über
-          </Text>
-
           <hr
             style={{
-              width: "100%",
+              width: "75%",
               border: "0.2px solid rgba(0,0,0,0.1)",
-              margin: "auto",
+              // margin: "auto",
               marginTop: "0.3rem",
               marginBottom: "1rem",
             }}
           />
-
           <div style={{ display: "flex", gap: "0.3rem", alignItems: "center" }}>
             <Text size="xs" weight={500}>
-              Metallfarbe:{" "}
+              product:{" "}
             </Text>
             <Text size="xs" color="gray">
-              Necklace
+              {data.productVariant.product.name}
             </Text>
           </div>
           <Image
-            src={dog}
+            src={data.productVariant.images[0]}
             width={50}
             height={50}
             className={classes.smallImage}
@@ -159,10 +213,11 @@ function Detail() {
           />
           <Group spacing={5}>
             <ActionIcon
+              disabled={value <= 1}
               size={32}
               radius="xl"
               variant="default"
-              onClick={() => handlers.current.decrement()}
+              onClick={() => setValue(value - 1)}
             >
               –
             </ActionIcon>
@@ -171,7 +226,6 @@ function Detail() {
               hideControls
               value={value}
               onChange={(val) => setValue(val)}
-              handlersRef={handlers}
               max={10}
               min={1}
               step={2}
@@ -179,10 +233,11 @@ function Detail() {
             />
 
             <ActionIcon
+              disabled={value >= 10}
               size={32}
               radius="xl"
               variant="default"
-              onClick={() => handlers.current.increment()}
+              onClick={() => setValue(value + 1)}
             >
               +
             </ActionIcon>
@@ -190,8 +245,16 @@ function Detail() {
               quantity
             </Text>
           </Group>
-          <Button mt="xl" leftIcon={<IconShoppingCart />}>
-            Add to cart
+          <Button
+            disabled={myCartLoading || myCartData?.myCartItems?.length}
+            mt="xl"
+            loading={cartLoading}
+            leftIcon={<IconShoppingCart />}
+            onClick={handleSubmit}
+          >
+            {!myCartLoading && !myCartData?.myCartItems?.length
+              ? "Add to cart"
+              : "In cart"}
           </Button>
         </div>
       </Grid.Col>
@@ -199,29 +262,16 @@ function Detail() {
         <Text align="center" weight={700} mb="lg">
           Recommended
         </Text>
-        <Card
-          p="lg"
-          radius="md"
-          mx="md"
-          mb="md"
-          withBorder
-          style={{ background: "none" }}
-        >
+        <Card p="lg" radius="md" mx="md" mb="md" style={{ background: "none" }}>
           <Card.Section m="sm">
-            <Image src={bikini} height={160} alt="Norway" />
+            <Image src={dog} height={160} alt="Norway" />
           </Card.Section>
 
           <Button variant="light" color="blue" fullWidth mt="md" radius="md">
-            Bikini
+            Dog
           </Button>
         </Card>
-        <Card
-          p="lg"
-          radius="md"
-          mx="md"
-          withBorder
-          style={{ background: "none" }}
-        >
+        <Card p="lg" radius="md" mx="md" style={{ background: "none" }}>
           <Card.Section m="sm">
             <Image src={bikini} height={160} alt="Norway" />
           </Card.Section>

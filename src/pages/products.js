@@ -18,8 +18,11 @@ import { GET_PRODUCTS, GET_CATEGORIES, GET_BRANDS } from "@graphql/queries";
 import { useLazyQuery, useMutation, useQuery } from "@apollo/client";
 import { CREATE_PRODUCT } from "@graphql/mutations";
 import uuid from "react-uuid";
+import { useSelector } from "react-redux";
 
 function Products() {
+  const auth = useSelector((state) => state.auth);
+
   const [activePage, setPage] = useState(1);
   const [opened, setOpened] = useState(false);
 
@@ -133,7 +136,7 @@ function Products() {
       await createProduct({
         variables: {
           category_id: values.category,
-          store_id: "ff155ed1-fbe0-4682-b6bd-678e721fc6fc",
+          store_id: auth.user.store[0].id,
           attributes: [...values.attributes],
           brand_id: values.brand,
           sku: uuid(),

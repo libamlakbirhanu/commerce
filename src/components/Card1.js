@@ -7,6 +7,8 @@ const useStyles = createStyles((theme) => ({
   wrapper: {
     display: "flex",
     flexDirection: "column",
+    justifyContent: "space-between",
+    gap: "1rem",
     backgroundColor: "white",
     borderRadius: "10px",
     padding: "10px",
@@ -14,6 +16,9 @@ const useStyles = createStyles((theme) => ({
     boxSizing: "border-box",
     position: "relative",
     marginBottom: "0.8rem",
+    // boxShadow: "rgba(100, 100, 111, 0.2) 0px 7px 29px 0px",
+    boxShadow:
+      "rgba(0, 0, 0, 0.02) 0px 1px 3px 0px, rgba(27, 31, 35, 0.15) 0px 0px 0px 1px",
 
     "&:hover::before": {
       position: "absolute",
@@ -52,6 +57,10 @@ const useStyles = createStyles((theme) => ({
     padding: "2px 5px",
     fontSize: ".8rem",
   },
+  image: {
+    objectFit: "cover",
+    // maxHeight: "150px",
+  },
 }));
 
 function Card1({ product }) {
@@ -61,9 +70,14 @@ function Card1({ product }) {
   return (
     <div
       className={classes.wrapper}
-      onClick={() => navigate("/detail", { replace: true })}
+      onClick={() => navigate(`/detail/${product.id}`, { replace: true })}
     >
-      <Image src={shoes} width={170} className={classes.image} mb={10} />
+      <Image
+        src={product.images[0]}
+        height={200}
+        className={classes.image}
+        mb={10}
+      />
       <div style={{ display: "flex", flexDirection: "column", gap: "0.1rem" }}>
         <Text className={classes.largeText} size="lg" color="gray" weight={600}>
           {product.product.name}
@@ -72,7 +86,10 @@ function Card1({ product }) {
           {product.description}
         </Text>
         <Text className={classes.largeText} weight="bold" size="xl">
-          ETB {product.price}
+          {product.price.toLocaleString("hi-IN", {
+            style: "currency",
+            currency: "ETB",
+          })}
         </Text>
         <Text className={classes.largeText} size="xs" color="red">
           -40 %
