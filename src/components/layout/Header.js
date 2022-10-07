@@ -30,7 +30,8 @@ import {
 import logo from "../../assets/logo192.png";
 import { GET_PRODUCTS, GET_CART_ITEMS } from "../../graphql/queries";
 import { useNavigate } from "react-router-dom";
-import { useQuery } from "@apollo/client";
+import { useMutation, useQuery } from "@apollo/client";
+import { REMOVE_CART_ITEM } from "../../graphql/mutations";
 
 const useStyles = createStyles((theme) => ({
   header: {
@@ -82,6 +83,9 @@ const useStyles = createStyles((theme) => ({
 
 const HeaderNav = () => {
   let navigate = useNavigate();
+
+  const [removeCartItem] = useMutation(REMOVE_CART_ITEM);
+
   const [search, setSearch] = useState("");
   const { data, loading, error } = useQuery(GET_PRODUCTS, {
     variables: {
@@ -96,6 +100,35 @@ const HeaderNav = () => {
   } = useQuery(GET_CART_ITEMS);
   const [opened, toggleOpened] = useToggle([false, true]);
   const { classes } = useStyles();
+
+  const handleDelete = async (id) => {
+    try {
+      await removeCartItem({
+        variables: {
+          id,
+        },
+
+        update(cache, { data: { deleteCartItem } }) {
+          cache.updateQuery(
+            {
+              query: GET_CART_ITEMS,
+            },
+            ({ myCartItems }) => {
+              return {
+                myCartItems: [
+                  ...myCartItems.filter(
+                    (cart) => cart.id !== deleteCartItem.id
+                  ),
+                ],
+              };
+            }
+          );
+        },
+      });
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   return cartData ? (
     <>
@@ -138,7 +171,7 @@ const HeaderNav = () => {
             }
           />
           <div style={{ marginLeft: 50 }}>
-            <Menu width={350} position="bottom-end">
+            <Menu width={350} position="bottom-end" closeOnItemClick={false}>
               <Menu.Target>
                 <Indicator
                   inline
@@ -169,10 +202,10 @@ const HeaderNav = () => {
                         alignItems: "center",
                       }}
                     >
-                      <Text weight={700}>
+                      <Text weight={500}>
                         {cart.productVariant.description}
                       </Text>
-                      <Group >
+                      <Group>
                         <div
                           style={{
                             marginLeft: "auto",
@@ -214,10 +247,14 @@ const HeaderNav = () => {
                           </ActionIcon>
                         </div>
                       </Group>
+                      <ActionIcon onClick={() => handleDelete(cart.id)}>
+                        <IconTrash color="red" size={18} />
+                      </ActionIcon>
                     </div>
                   </Menu.Item>
                 ))}
                 <Button
+                  disabled={!cartData.myCartItems.length}
                   leftIcon={<IconShoppingCart size={14} />}
                   style={{ width: "100%" }}
                 >

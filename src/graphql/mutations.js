@@ -127,6 +127,14 @@ export const CREATE_CART_ITEM = gql`
   }
 `;
 
+export const REMOVE_CART_ITEM = gql`
+  mutation RemoveCartItem($id: String!) {
+    deleteCartItem(id: $id) {
+      id
+    }
+  }
+`;
+
 export const ADD_CAR = gql`
   mutation AddCar($carInput: CarData!) {
     addCar(carInput: $carInput) {
