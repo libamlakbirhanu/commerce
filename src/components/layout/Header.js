@@ -31,7 +31,8 @@ import logo from "../../assets/logo192.png";
 import { GET_PRODUCTS, GET_CART_ITEMS } from "../../graphql/queries";
 import { useNavigate } from "react-router-dom";
 import { useMutation, useQuery } from "@apollo/client";
-import { REMOVE_CART_ITEM } from "../../graphql/mutations";
+import { REMOVE_CART_ITEM, UPDATE_CART_ITEM } from "../../graphql/mutations";
+import { useSelector } from "react-redux";
 
 const useStyles = createStyles((theme) => ({
   header: {
@@ -82,9 +83,11 @@ const useStyles = createStyles((theme) => ({
 }));
 
 const HeaderNav = () => {
+  const auth = useSelector((state) => state.auth);
   let navigate = useNavigate();
 
   const [removeCartItem] = useMutation(REMOVE_CART_ITEM);
+  const [updateCartItem] = useMutation(UPDATE_CART_ITEM);
 
   const [search, setSearch] = useState("");
   const { data, loading, error } = useQuery(GET_PRODUCTS, {
@@ -128,6 +131,24 @@ const HeaderNav = () => {
     } catch (err) {
       console.log(err);
     }
+  };
+
+  const handleEdit = async (cart, quantity) => {
+    const res = await updateCartItem({
+      variables: {
+        input: {
+          id: cart.id,
+          unit_price: cart.unit_price,
+          quantity: quantity,
+          user: {
+            connect: auth.user.id,
+          },
+          productVariant: {
+            connect: cart.productVariant.id,
+          },
+        },
+      },
+    });
   };
 
   return cartData ? (
@@ -219,7 +240,7 @@ const HeaderNav = () => {
                             size={32}
                             radius="xl"
                             variant="default"
-                            // onClick={() => setValue(value - 1)}
+                            onClick={() => handleEdit(cart, cart.quantity - 1)}
                           >
                             –
                           </ActionIcon>
@@ -241,7 +262,7 @@ const HeaderNav = () => {
                             size={32}
                             radius="xl"
                             variant="default"
-                            // onClick={() => setValue(value + 1)}
+                            onClick={() => handleEdit(cart, cart.quantity + 1)}
                           >
                             +
                           </ActionIcon>

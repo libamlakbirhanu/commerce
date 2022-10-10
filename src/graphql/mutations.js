@@ -131,6 +131,29 @@ export const REMOVE_CART_ITEM = gql`
   mutation RemoveCartItem($id: String!) {
     deleteCartItem(id: $id) {
       id
+      unit_price
+      quantity
+      productVariant {
+        id
+        price
+        description
+        images
+        product {
+          name
+          description
+        }
+      }
+    }
+  }
+`;
+
+
+export const UPDATE_CART_ITEM = gql`
+  mutation updateCartItem($input: CartItemInput!) {
+    updateCartItem(input: $input) {
+      id
+      quantity
+      unit_price
     }
   }
 `;
