@@ -18,7 +18,7 @@ import { typeDefs } from "./graphql/clientTypedefs";
 import { setContext } from "@apollo/client/link/context";
 
 const httpLink = createUploadLink({
-  uri: "https://commerce.api.oddatech.com/graphql",
+  uri: process.env.REACT_APP_API_URL,
 });
 
 const authLink = setContext((_, { headers }) => {
