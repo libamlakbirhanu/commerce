@@ -16,6 +16,8 @@ import {
   Avatar,
   ActionIcon,
   NumberInput,
+  LoadingOverlay,
+  ScrollArea,
 } from "@mantine/core";
 import { useToggle } from "@mantine/hooks";
 import {
@@ -86,8 +88,10 @@ const HeaderNav = () => {
   const auth = useSelector((state) => state.auth);
   let navigate = useNavigate();
 
-  const [removeCartItem] = useMutation(REMOVE_CART_ITEM);
-  const [updateCartItem] = useMutation(UPDATE_CART_ITEM);
+  const [removeCartItem, { loading: removeLoading }] =
+    useMutation(REMOVE_CART_ITEM);
+  const [updateCartItem, { loading: updateLoading }] =
+    useMutation(UPDATE_CART_ITEM);
 
   const [search, setSearch] = useState("");
   const { data, loading, error } = useQuery(GET_PRODUCTS, {
@@ -104,11 +108,11 @@ const HeaderNav = () => {
   const [opened, toggleOpened] = useToggle([false, true]);
   const { classes } = useStyles();
 
-  const handleDelete = async (id) => {
+  const handleDelete = async (cart) => {
     try {
       await removeCartItem({
         variables: {
-          id,
+          id: cart.id,
         },
 
         update(cache, { data: { deleteCartItem } }) {
@@ -126,6 +130,25 @@ const HeaderNav = () => {
               };
             }
           );
+
+          const { myCartItems } = cache.readQuery({
+            query: GET_CART_ITEMS,
+            variables: {
+              product_variant_id: cart.productVariant.id,
+            },
+          });
+
+          cache.writeQuery({
+            query: GET_CART_ITEMS,
+            variables: {
+              product_variant_id: cart.productVariant.id,
+            },
+            data: {
+              myCartItems: [
+                ...myCartItems.filter((cart) => cart.id !== deleteCartItem.id),
+              ],
+            },
+          });
         },
       });
     } catch (err) {
@@ -205,82 +228,101 @@ const HeaderNav = () => {
                 </Indicator>
               </Menu.Target>
               <Menu.Dropdown height={50}>
-                {/* <Menu.Label>Application</Menu.Label> */}
-                {cartData.myCartItems.map((cart) => (
-                  <Menu.Item
-                    icon={
-                      <Avatar
-                        src={cart.productVariant.images[0]}
-                        alt="it's me"
-                      />
-                    }
-                  >
-                    <div
-                      style={{
-                        display: "flex",
-                        gap: "1rem",
-                        justifyContent: "space-between",
-                        alignItems: "center",
-                      }}
+                <ScrollArea.Autosize maxHeight={300}>
+                  {/* <Menu.Label>Application</Menu.Label> */}
+                  {cartData.myCartItems.map((cart) => (
+                    <Menu.Item
+                      icon={
+                        <Avatar
+                          src={cart.productVariant.images[0]}
+                          alt="it's me"
+                        />
+                      }
                     >
-                      <Text weight={500}>
-                        {cart.productVariant.description}
-                      </Text>
-                      <Group>
-                        <div
-                          style={{
-                            marginLeft: "auto",
-                            display: "flex",
-                            alignItems: "center",
-                            gap: "5px",
-                          }}
-                        >
-                          <ActionIcon
-                            disabled={cart.quantity <= 1}
-                            size={32}
-                            radius="xl"
-                            variant="default"
-                            onClick={() => handleEdit(cart, cart.quantity - 1)}
-                          >
-                            –
-                          </ActionIcon>
-
-                          <NumberInput
-                            hideControls
-                            value={cart.quantity}
-                            // onChange={(val) => setValue(val)}
-                            max={10}
-                            min={1}
-                            step={2}
-                            styles={{
-                              input: { width: 54, textAlign: "center" },
+                      <div
+                        style={{
+                          display: "flex",
+                          gap: "1rem",
+                          justifyContent: "space-between",
+                          alignItems: "center",
+                        }}
+                      >
+                        <LoadingOverlay
+                          visible={updateLoading || removeLoading}
+                          overlayBlur={2}
+                        />
+                        <Text weight={500}>
+                          {cart.productVariant.description}
+                        </Text>
+                        <Group>
+                          <div
+                            style={{
+                              marginLeft: "auto",
+                              display: "flex",
+                              alignItems: "center",
+                              gap: "5px",
                             }}
-                          />
-
-                          <ActionIcon
-                            disabled={cart.quantity >= 10}
-                            size={32}
-                            radius="xl"
-                            variant="default"
-                            onClick={() => handleEdit(cart, cart.quantity + 1)}
                           >
-                            +
-                          </ActionIcon>
-                        </div>
-                      </Group>
-                      <ActionIcon onClick={() => handleDelete(cart.id)}>
-                        <IconTrash color="red" size={18} />
-                      </ActionIcon>
-                    </div>
-                  </Menu.Item>
-                ))}
-                <Button
-                  disabled={!cartData.myCartItems.length}
-                  leftIcon={<IconShoppingCart size={14} />}
-                  style={{ width: "100%" }}
-                >
-                  Check out
-                </Button>
+                            <ActionIcon
+                              disabled={cart.quantity <= 1}
+                              size={32}
+                              radius="xl"
+                              variant="default"
+                              onClick={() =>
+                                handleEdit(cart, cart.quantity - 1)
+                              }
+                            >
+                              –
+                            </ActionIcon>
+
+                            <NumberInput
+                              hideControls
+                              value={cart.quantity}
+                              // onChange={(val) => setValue(val)}
+                              max={10}
+                              min={1}
+                              step={2}
+                              styles={{
+                                input: { width: 54, textAlign: "center" },
+                              }}
+                            />
+
+                            <ActionIcon
+                              disabled={cart.quantity >= 10}
+                              size={32}
+                              radius="xl"
+                              variant="default"
+                              onClick={() =>
+                                handleEdit(cart, cart.quantity + 1)
+                              }
+                            >
+                              +
+                            </ActionIcon>
+                          </div>
+                        </Group>
+                        <ActionIcon onClick={() => handleDelete(cart)}>
+                          <IconTrash color="red" size={18} />
+                        </ActionIcon>
+                      </div>
+                    </Menu.Item>
+                  ))}
+                </ScrollArea.Autosize>
+
+                {cartData.myCartItems.length ? (
+                  <Button
+                    disabled={!cartData.myCartItems.length}
+                    leftIcon={<IconShoppingCart size={14} />}
+                    style={{ width: "100%" }}
+                  >
+                    Check out
+                  </Button>
+                ) : (
+                  <h3
+                    style={{ textAlign: "center", textTransform: "uppercase" }}
+                  >
+                    no cart items found
+                  </h3>
+                )}
               </Menu.Dropdown>
             </Menu>
           </div>
