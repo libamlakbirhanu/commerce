@@ -235,7 +235,7 @@ const HeaderNav = () => {
                       icon={
                         <Avatar
                           src={cart.productVariant.images[0]}
-                          alt="it's me"
+                          alt="product"
                         />
                       }
                     >
@@ -313,6 +313,7 @@ const HeaderNav = () => {
                     disabled={!cartData.myCartItems.length}
                     leftIcon={<IconShoppingCart size={14} />}
                     style={{ width: "100%" }}
+                    onClick={() => navigate("checkout", { replace: true })}
                   >
                     Check out
                   </Button>

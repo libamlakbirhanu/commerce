@@ -18,6 +18,7 @@ import { authLogin, switchFirstEntrance } from "@redux/authSlice";
 import ProductVariant from "./pages/ProductVariant";
 import { useLazyQuery } from "@apollo/client";
 import { GET_USER } from "./graphql/queries";
+import Checkout from "./pages/checkout";
 
 function App() {
   const auth = useSelector((state) => state.auth);
@@ -58,7 +59,7 @@ function App() {
                 <Navigate replace to="/store" />
               ) : (
                 <Navigate replace to="/" />
-              ) 
+              )
             }
           />
           <Route path="store" element={<Store />} />
@@ -97,6 +98,12 @@ function App() {
           <Route
             path="detail/:id"
             element={!auth.user ? <Navigate replace to="/login" /> : <Detail />}
+          />
+          <Route
+            path="checkout"
+            element={
+              !auth.user ? <Navigate replace to="/login" /> : <Checkout />
+            }
           />
 
           <Route path="login" element={<Login />} />

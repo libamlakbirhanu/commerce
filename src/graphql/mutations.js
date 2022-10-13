@@ -147,13 +147,20 @@ export const REMOVE_CART_ITEM = gql`
   }
 `;
 
-
 export const UPDATE_CART_ITEM = gql`
   mutation updateCartItem($input: CartItemInput!) {
     updateCartItem(input: $input) {
       id
       quantity
       unit_price
+    }
+  }
+`;
+export const CREATE_ORDER = gql`
+  mutation createOrder($input: OrderInput!) {
+    createOrder(input: $input) {
+      id
+      total_price
     }
   }
 `;
