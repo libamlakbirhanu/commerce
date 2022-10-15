@@ -1,6 +1,6 @@
 import { Container, LoadingOverlay } from "@mantine/core";
 import React, { useEffect } from "react";
-import { Routes, Route, Link, Navigate } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import Layout from "./components/layout/Layout";
 import About from "./pages/about";
@@ -13,15 +13,17 @@ import UserRoleChoice from "./pages/userRoleChoice";
 import Store from "./pages/store";
 import Products from "./pages/products";
 import Unauthorized from "./pages/unauthorized";
-import CAN from "@ability/can";
 import { authLogin, switchFirstEntrance } from "@redux/authSlice";
 import ProductVariant from "./pages/ProductVariant";
 import { useLazyQuery } from "@apollo/client";
 import { GET_USER } from "./graphql/queries";
 import Checkout from "./pages/checkout";
+import { useAbility } from "@casl/react";
+import { AbilityContext } from "./casl/can";
 
 function App() {
   const auth = useSelector((state) => state.auth);
+  const ability = useAbility(AbilityContext);
   const dispatch = useDispatch();
   const [me] = useLazyQuery(GET_USER);
 
@@ -76,7 +78,7 @@ function App() {
             element={
               !auth.user ? (
                 <Navigate replace to="/login" />
-              ) : !CAN("read", "store") ? (
+              ) : !ability.can("read", "store") ? (
                 <Navigate replace to="/unauthorized" />
               ) : (
                 <Products />
@@ -88,7 +90,7 @@ function App() {
             element={
               !auth.user ? (
                 <Navigate replace to="/login" />
-              ) : !CAN("read", "store") ? (
+              ) : !ability.can("read", "store") ? (
                 <Navigate replace to="/unauthorized" />
               ) : (
                 <ProductVariant />

@@ -1,7 +1,7 @@
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { decrement, increment } from "../redux/counterSlice";
-import CAN from "../casl/can";
+import { Can } from "../casl/can";
 import { useQuery, useMutation } from "@apollo/client";
 import { GET_CARS, IS_LOGGED_IN, USER } from "../graphql/queries";
 import { user } from "../store";
@@ -81,9 +81,9 @@ function About() {
           Increment
         </button>
         <span>{count}</span>
-        {CAN("decrement", "count") && (
+        <Can I="decrement" a="count">
           <button onClick={() => dispatch(decrement())}>Decrement</button>
-        )}
+        </Can>
       </div>
       {/* <div>
         <h1 onClick={changeEmail}>{data?.user?.email}</h1>

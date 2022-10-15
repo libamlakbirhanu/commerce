@@ -16,6 +16,8 @@ import App from "./App";
 import { isLoggedInVar, user } from "./store";
 import { typeDefs } from "./graphql/clientTypedefs";
 import { setContext } from "@apollo/client/link/context";
+import { AbilityContext } from "./casl/can";
+import ability from "./casl/ability";
 
 const httpLink = createUploadLink({
   uri: process.env.REACT_APP_API_URL,
@@ -77,7 +79,9 @@ root.render(
     <Provider store={store}>
       <ApolloProvider client={client}>
         <BrowserRouter>
-          <App />
+          <AbilityContext.Provider value={ability}>
+            <App />
+          </AbilityContext.Provider>
         </BrowserRouter>
       </ApolloProvider>
     </Provider>
