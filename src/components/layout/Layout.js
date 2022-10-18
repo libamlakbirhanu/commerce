@@ -5,7 +5,14 @@ import HeaderNav from "./Header";
 
 function Layout({ children }) {
   let location = useLocation();
-  const exclude = ["/role-choice", "/unauthorized", "/login", "/register"];
+  const exclude = [
+    "/role-choice",
+    "/unauthorized",
+    "/login",
+    "/register",
+    "/verify",
+    "/verify-message",
+  ];
 
   return (
     <>

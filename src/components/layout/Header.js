@@ -131,24 +131,27 @@ const HeaderNav = () => {
             }
           );
 
-          const { myCartItems } = cache.readQuery({
+          const res = cache.readQuery({
             query: GET_CART_ITEMS,
             variables: {
               product_variant_id: cart.productVariant.id,
             },
           });
 
-          cache.writeQuery({
-            query: GET_CART_ITEMS,
-            variables: {
-              product_variant_id: cart.productVariant.id,
-            },
-            data: {
-              myCartItems: [
-                ...myCartItems.filter((cart) => cart.id !== deleteCartItem.id),
-              ],
-            },
-          });
+          res &&
+            cache.writeQuery({
+              query: GET_CART_ITEMS,
+              variables: {
+                product_variant_id: cart.productVariant.id,
+              },
+              data: {
+                myCartItems: [
+                  ...res.myCartItems.filter(
+                    (cart) => cart.id !== deleteCartItem.id
+                  ),
+                ],
+              },
+            });
         },
       });
     } catch (err) {
