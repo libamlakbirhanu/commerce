@@ -15,6 +15,9 @@ import {
 import { Link, useNavigate } from "react-router-dom";
 import loginGif from "../assets/login-bg0.gif";
 import { REGISTER } from "../graphql/mutations";
+import { isLoggedInVar, user } from "../store";
+import { useDispatch } from "react-redux";
+import { authLogin } from "../redux/authSlice";
 
 const useStyles = createStyles((theme) => ({
   wrapper: {
@@ -66,6 +69,7 @@ const schema = Yup.object().shape({
 });
 
 const Register = () => {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const [register, { data, loading, error }] = useMutation(REGISTER);
   const { classes } = useStyles();
@@ -84,7 +88,7 @@ const Register = () => {
 
   const handleSubmit = async (values) => {
     try {
-      await register({
+      const res = await register({
         variables: {
           input: {
             email: values.email,
@@ -94,7 +98,16 @@ const Register = () => {
         },
       });
 
-      navigate("/login", { replace: true });
+      localStorage.setItem("token", res.data.register.access_token);
+
+      isLoggedInVar(true);
+      user(res.data.register.user);
+
+      dispatch(authLogin(res.data.register.user));
+
+      !res.data.register.user.roles.length
+        ? navigate("/role-choice", { replace: true })
+        : navigate("/", { replace: true });
     } catch (err) {
       console.log(err);
     }

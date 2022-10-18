@@ -16,6 +16,39 @@ export const REGISTER = gql`
   }
 `;
 
+export const VERIFY_EMAIL = gql`
+  mutation Verify($input: VerifyEmailInput!) {
+    verifyEmail(input: $input) {
+      access_token
+      refresh_token
+      user {
+        id
+        email
+        roles {
+          id
+          name
+        }
+      }
+    }
+  }
+`;
+
+export const RESEND_VERIFICATION = gql`
+  mutation ResendVerification {
+    resendVerificationEmail {
+      tokens {
+        acess_token
+        refresh_token
+        user {
+          id
+          email
+          roles
+        }
+      }
+    }
+  }
+`;
+
 export const LOGIN = gql`
   mutation Login($input: LoginInput) {
     login(input: $input) {
