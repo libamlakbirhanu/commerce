@@ -140,13 +140,13 @@ const useStyles = createStyles((theme) => ({
 }));
 
 function Index() {
-  const [page, setPage] = useState(0);
+  const [page, setPage] = useState(1);
   let navigate = useNavigate();
   const auth = useSelector((state) => state.auth);
   const { classes } = useStyles();
   const [getProductVariants, { loading, error, data, fetchMore }] =
     useLazyQuery(GET_PRODUCT_VARIANTS, {
-      variables: { first: 20, page: page },
+      variables: { first: 12, page: 1 },
     });
   // console.log(auth);
   useEffect(() => {
@@ -429,13 +429,20 @@ function Index() {
 
           <div style={{ marginTop: "2rem" }}></div>
 
-          {!data.productVariants.data.length ? (
+          {data.productVariants.data.length ? (
             <InView
               onChange={async (inView) => {
-                if (inView) {
-                  getProductVariants({
-                    variables: { first: 20, page: page + 1 },
+                if (
+                  inView &&
+                  !loading &&
+                  data.productVariants.paginatorInfo.currentPage !==
+                    data.productVariants.paginatorInfo.lastPage
+                ) {
+                  await fetchMore({
+                    variables: { first: 12, page: page + 1 },
                   });
+
+                  setPage(page + 1);
                 }
               }}
             />
