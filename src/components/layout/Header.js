@@ -20,15 +20,7 @@ import {
   ScrollArea,
 } from "@mantine/core";
 import { useToggle } from "@mantine/hooks";
-import {
-  IconSearch,
-  IconShoppingCart,
-  IconSettings,
-  IconPhoto,
-  IconMessageCircle,
-  IconTrash,
-  IconArrowsLeftRight,
-} from "@tabler/icons";
+import { IconSearch, IconShoppingCart, IconTrash } from "@tabler/icons";
 import logo from "../../assets/logo192.png";
 import { GET_PRODUCTS, GET_CART_ITEMS } from "../../graphql/queries";
 import { useNavigate } from "react-router-dom";
@@ -94,12 +86,12 @@ const HeaderNav = () => {
     useMutation(UPDATE_CART_ITEM);
 
   const [search, setSearch] = useState("");
-  const { data, loading, error } = useQuery(GET_PRODUCTS, {
-    variables: {
-      first: 10,
-      search,
-    },
-  });
+  // const { data, loading, error } = useQuery(GET_PRODUCTS, {
+  //   variables: {
+  //     first: 10,
+  //     search,
+  //   },
+  // });
   const {
     data: cartData,
     loading: cartLoading,
@@ -199,7 +191,7 @@ const HeaderNav = () => {
             />
           </Group>
 
-          <Autocomplete
+          {/* <Autocomplete
             className={classes.search}
             placeholder="Search"
             icon={<IconSearch size={16} />}
@@ -216,7 +208,7 @@ const HeaderNav = () => {
                   })
                 : []
             }
-          />
+          /> */}
           {/* <Can not I="create" a="Post"></Can> */}
           <div style={{ marginLeft: 50 }}>
             <Menu width={350} position="bottom-end" closeOnItemClick={false}>

@@ -2,7 +2,6 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import { BrowserRouter } from "react-router-dom";
 import {
-  createHttpLink,
   ApolloClient,
   InMemoryCache,
   ApolloProvider,
@@ -55,21 +54,6 @@ export const client = new ApolloClient({
               return user();
             },
           },
-          productVariants: {
-            keyArgs: false,
-            merge(existing, incoming, { args: { first, page } }) {
-              // Slicing is necessary because the existing data is
-              // immutable, and frozen in development.
-              console.log(incoming);
-              const merged = {
-                ...existing,
-                ...incoming,
-                data: [...(existing?.data || []), ...incoming.data],
-              };
-
-              return merged;
-            },
-          },
         },
       },
     },
@@ -91,3 +75,49 @@ root.render(
     </Provider>
   </React.StrictMode>
 );
+
+// products: {
+//   // keyArgs: ["first", "page"],
+//   merge(
+//     existing = { data: [], paginatorInfo: {} },
+//     incoming,
+//     { args: { first, page }, readField }
+//   ) {
+//     const newData = existing.data.slice(0);
+//     if (page === 1) {
+//       // If we are on the first page (offset is 0), add the incoming data at the beginning
+//       newData.unshift(...incoming.data);
+//     } else {
+//       // If we are on any other page, merge the data normally
+//       const existingIdSet = new Set(
+//         newData.map((product) => readField("id", product))
+//       );
+//       const filteredIncoming = incoming.data.filter(
+//         (product) => !existingIdSet.has(readField("id", product))
+//       );
+//       newData.push(...filteredIncoming);
+//     }
+//     return {
+//       data: newData,
+//       paginatorInfo: {
+//         ...existing.paginatorInfo,
+//         ...incoming.paginatorInfo,
+//       },
+//     };
+//   },
+//   read(
+//     existing = { data: [], paginatorInfo: {} },
+//     { args: { first, page } }
+//   ) {
+//     // Slice the data based on the limit and offset
+//     const slicedData = existing.data.slice(
+//       (page - 1) * first,
+//       page * first
+//     );
+
+//     return {
+//       data: slicedData,
+//       paginatorInfo: existing.paginatorInfo,
+//     };
+//   },
+// },

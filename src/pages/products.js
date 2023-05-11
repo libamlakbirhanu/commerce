@@ -105,7 +105,7 @@ function Products() {
   );
   const { data, loading } = useQuery(GET_PRODUCTS, {
     variables: {
-      first: 10,
+      first: 5,
       page: activePage,
     },
   });
@@ -136,12 +136,34 @@ function Products() {
       await createProduct({
         variables: {
           category_id: values.category,
-          store_id: auth.user.store[0].id,
+          // store_id: auth.user.store[0].id,
+          store_id: "0756dccc-5d44-4413-b3ee-8ed456691e65",
           attributes: [...values.attributes],
           brand_id: values.brand,
           sku: uuid(),
           name: values.name,
           description: values.description,
+        },
+
+        update(cache, { data: { createProduct } }) {
+          cache.modify({
+            id: cache.identify({
+              __typename: "Query",
+            }),
+            fields: {
+              products(
+                existing = { data: [], paginatorInfo: {} },
+                { readField }
+              ) {
+                const newData = existing.data.slice(0);
+                newData.unshift(createProduct);
+                return {
+                  data: newData,
+                  paginatorInfo: existing.paginatorInfo,
+                };
+              },
+            },
+          });
         },
       });
 

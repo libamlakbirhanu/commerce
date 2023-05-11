@@ -96,6 +96,7 @@ function Detail() {
               product_variant_id: id,
             },
           });
+
           cache.writeQuery({
             query: GET_CART_ITEMS,
             variables: {
